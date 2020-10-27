@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "agendasalaoapi",
+  "private_key_id": "d9e87e82682233819572f1230b9d56948f2f444f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCiQtVgstW31TqO\n4GJSiokd5QcSt2N/q1V1xB4VfQW5TMZxCTmtVxuAi1YuC/UJJUKaCx04v7RKBbVx\n5ikVydffuPkFMM+qAS+KpZzu+HCtSlHT7J//Ba6KPvyl25Q7i+iFIVHwa3Vi+hbm\nFVdF4OH8UUq4meJIBkc+H6FqLWRuaCDCfzwDxx8FK0188HPDhCT3LY3hUyh04WCS\nzs2W2mHf8BUQTNXHdBR8GochvJa+s6GJ60GpWIottd3Bds+7WDwWylse7vlmk8jL\nK9IoGRgf58Jc0B0TU24wq6IlglHetrSmPdmbt82fPc1kW7Q8A4nGsKhB9uRL1/SK\nHJGdE9OBAgMBAAECggEAMNpFaxE81lXNBSJah/Zs1QLVD9YGD3SyzLuowRh8pi8O\n2g6Ifn9o6NlKr59q/X9p3340JJdXPSgd2naM7SHxrEqBMwZgp5Mm0KwPJUXIiuwC\n2fb2ru3zgGz5XShQp2L2tUp0ZJm95Hhed5R6S7Aq6fBBunWeUsgNIA+e5hxXjgOx\nZAUCvLICshtl6dm3+EAfown/7hU9rzqN7fVx/f/peVotDDIj8VhfztgUp/ZmFF15\n3plKaQTqf1DbAvzscmOul2cQ01o/9asBeFlPlPKYEUzJMHKWudU9d7mYjZlSpYNq\n+IZsoK81XHQqpe3cuSx6kppY+1mV3qEOif3H5P6ipwKBgQDh9lbCR9Ph11WaF0vX\noZGVhktH7KLMKiqwQf3ARKt/MOfyXuCi39qoSojbPYAd1O3QyneJBEECK45Axcvx\nD+z18J5lErI7zBXoU52cLfgHeMvTH7bquIUdtwBzxZQKnCfhvqHhXgXn8f6KWVT4\nG4fLZmdVrv/uIFUpg5JEIK+6uwKBgQC31LJHBZ1EWiw8/3njZMhjo1ULEkmLDRpG\nxu29E5ItXbvPSkuCM/sNJFfia+S9iWMG6Fg1m7AZ1c3uczFjDdbodiLTCBP8FOqf\n5Xtpg32xqeguQE/6WKBvCvqIuxoYcDTrY0LSdxuXOez/bvJiBVAVFNywTAcKTZhT\n+U8VYcl88wKBgAP37pgk6My7mm5FYHieBs+Id0QBHO7XAr7rucgprJVkR36TOgDC\nS7XO8U5gayKa/b5AAA9w+q9OEoaCss0+CVxcaHu/809niy70YP1ANW30KihAE1dV\n/EiEUUa3Pp1dFro5PeCWZSYost69KOfem+jvmHsBws7s1HIRNH1r0YpHAoGAP+rZ\nje46z2BXD2J4/AK31kUdNbtHDO0iXMegM+TRJ6r2uU2I0Z3HRbuEPzrqjqhtYSJ6\nQTF/2ovHjYhJ/Ln8JlmlJCEj6btQFQaSkY5hrtt32lUMOeyE4/c6Qz5jBWpGTC34\nNvupATzn1ay65DAatynIzhexPvjZ5SDDSZj1mNcCgYAjTw4WV+2wes8ZX56au23z\nuvgTCHZ4LcrvNuOgaCACPG7nUwTHiVNF+p0eCEnBSeknhum8N7l6+JwpHykZJErp\nWdZsVDRMTsV1Bhl+LNtVgZK5XXPnH7GjoClXYR+hX70RoooKa40W/m0CIoNUnSPY\n/ryyV/E8GO+2EohKJA/bZA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-1ktko@agendasalaoapi.iam.gserviceaccount.com",
+  "client_id": "110821223637905742981",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1ktko%40agendasalaoapi.iam.gserviceaccount.com"
+}
