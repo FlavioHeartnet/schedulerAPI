@@ -1,4 +1,4 @@
-import db from "../firebase"
+import { db } from "../firebase"
 
 interface DatabaseStruct{
     store(data: any, collection: string): Promise<boolean>
