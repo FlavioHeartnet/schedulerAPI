@@ -49,7 +49,6 @@ var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var firebase_1 = require("./firebase");
 var currentUser = {
     username: "",
-    refreshToken: ""
 };
 var app = express_1.default();
 var port = 3000;
@@ -57,34 +56,56 @@ var env = dotenv_1.default.config();
 var token = process.env.ACCESS_TOKEN_SECRET;
 app.use(body_parser_1.default.json());
 app.use(cookie_parser_1.default());
-app.use(function (req, res, next) {
-    var accessToken = req.cookies.jwt;
-    if (!accessToken) {
-        return res.status(403).send();
-    }
-    var payload;
-    try {
-        payload = jsonwebtoken_1.default.verify(accessToken, token);
-        next();
-    }
-    catch (e) {
-        res.status(401).send();
-    }
-});
+var verify = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var accessToken, _a, header, payload, signature, verifier, e_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                accessToken = req.header("Authorization").substr(7);
+                _a = accessToken.split("."), header = _a[0], payload = _a[1], signature = _a[2];
+                console.log("Token: " + accessToken);
+                if (!accessToken) {
+                    return [2 /*return*/, res.json({
+                            Error: "Não ha token valido ativo "
+                        })];
+                }
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, jsonwebtoken_1.default.verify(accessToken, token)];
+            case 2:
+                verifier = _b.sent();
+                console.log("payload" + payload);
+                next();
+                return [3 /*break*/, 4];
+            case 3:
+                e_1 = _b.sent();
+                console.log(e_1);
+                res.send("Token expirado ou incorreto");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var accessToken, refreshToken;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, firebase_1.auth.signInWithEmailAndPassword(req.body.email, req.body.password).then(function (a) {
-                    console.log(a.user);
+                    //console.log(a.user)
                     currentUser.username = req.body.email;
                 }).catch(function (error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    res.status(401).send(errorCode + " " + errorMessage);
+                    res.json({
+                        Error: errorMessage,
+                        ErrorCode: errorCode
+                    });
                 })];
             case 1:
                 _a.sent();
+                accessToken = "";
+                console.log(token);
                 accessToken = jsonwebtoken_1.default.sign(currentUser, token, {
                     algorithm: "HS256",
                     expiresIn: process.env.ACCESS_TOKEN_LIFE
@@ -93,15 +114,16 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                     algorithm: "HS256",
                     expiresIn: process.env.REFRESH_TOKEN_LIFE
                 });
-                currentUser.refreshToken = refreshToken;
-                res.cookie("jwt", accessToken, { secure: true, httpOnly: true });
-                res.send();
+                res.json({
+                    token: accessToken,
+                    User: currentUser
+                });
                 return [2 /*return*/];
         }
     });
 }); });
-app.post('/refresh', function (req, res) {
-    var accessToken = req.cookies.jwt;
+app.post('/refresh', verify, function (req, res) {
+    var accessToken = req.header("authentication");
     if (!accessToken) {
         return res.status(403).send();
     }
@@ -112,21 +134,16 @@ app.post('/refresh', function (req, res) {
     catch (e) {
         res.status(401).send();
     }
-    var refreshToken = currentUser.refreshToken;
-    try {
-        jsonwebtoken_1.default.verify(refreshToken, token);
-    }
-    catch (e) {
-        return res.status(401).send();
-    }
     var newToken = jsonwebtoken_1.default.sign(currentUser, token, {
         algorithm: "HS256",
         expiresIn: process.env.ACCESS_TOKEN_LIFE
     });
-    res.cookie("jwt", newToken, { secure: true, httpOnly: true });
-    res.send();
+    res.json({
+        token: newToken,
+        email: currentUser.username
+    });
 });
-app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get('/', verify, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var client, result;
     return __generator(this, function (_a) {
         client = new ClienteController_1.default();
