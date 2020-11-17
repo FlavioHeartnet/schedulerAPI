@@ -2,18 +2,22 @@ import Base from "../Database/Base"
 import Cliente from "../Model/Cliente"
 
 export default class ClienteController extends Base{
-
+    public static Collection: string = "Cliente"
+    
     constructor(){
         super()
     }
 
     public insert(nome: String, cpf: String, DataNascimento: Date){
         const cliente = new Cliente(nome, cpf, DataNascimento)
-       return this.store(cliente, "Cliente", this.clientConverter()).then((d) => d)     
+       return this.store(cliente, ClienteController.Collection, this.clientConverter()).then((d) => d)     
        
     }
 
-    public update(){
+    public update(id: string, nome: String, cpf: String, DataNascimento: Date){
+        const cliente = new Cliente(nome, cpf, DataNascimento)
+        return this.edit(cliente, ClienteController.Collection, id, this.clientConverter())
+        
 
     }
 

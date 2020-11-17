@@ -21,25 +21,24 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 const verify = async (req: any, res: any, next: any) => {
 
-    const accessToken: string = req.header("Authorization").substr(7)
-
-    //let [header, payload, signature] = accessToken.split(".")
-
-    if(!accessToken){
-        return res.json({
-            Error: "Não ha token valido ativo "
-        })
-    }
-
-    
-    try{ 
-        await jwt.verify(accessToken, token)
-        next()
+    try{
+        const accessToken: string = req.header("Authorization").substr(7)
+        if(!accessToken){
+            return res.json({
+                Error: "Não ha token valido ativo "
+            })
+        }
+        try{ 
+            await jwt.verify(accessToken, token)
+            next()
+        }catch(e){
+            console.log(e)
+            res.send("Token expirado ou incorreto")
+            
+        }
     }catch(e){
-        console.log(e)
-        res.send("Token expirado ou incorreto")
-        
-    }
+        res.send("Token necessario")
+    } 
 
 
 }
@@ -108,20 +107,18 @@ app.post('/refresh',verify,  (req, res) => {
 
 })
 
-app.get('/',verify, async (req, res) => {
-
-    
-    
+app.get('/',verify, async (req, res) => { 
 
     const result = {
         Status : true,
-        Nome: "Flavio"
+        Text: "API Logged"
     }
 
     res.json(result)
 })
 
-app.post('/cliente', verify, (req, res)=>{
+app.route("Cliente")
+.post(verify, (req, res)=>{
     const client = new ClientController();
     try{
         const nome = req.body.nome
@@ -141,8 +138,27 @@ app.post('/cliente', verify, (req, res)=>{
             ErroMessage: e
         })
     }
-
-    
 })
+.get(verify, (req, res)=>{
+    const client = new ClientController()
+    try{
+        const id = req.body.id
+        const nome = req.body.nome
+        const cpf = req.body.cpf
+        const DataNascimento = req.body.DataNascimento
+        client.update(id, nome, cpf, DataNascimento)
+        res.json({
+            Nome: nome,
+            cpf: cpf,
+            DataNascimento: DataNascimento
+        })
+        
+    }catch(e){
+        res.send("id não informado ou inválido!")
+    }
+    
+
+})
+
 
 app.listen(port, () => console.log(`{rodando na porta http://localhost:${port}/)`))

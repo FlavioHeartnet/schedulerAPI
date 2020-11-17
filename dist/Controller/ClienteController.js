@@ -17,14 +17,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Base_1 = __importDefault(require("../Database/Base"));
+var Cliente_1 = __importDefault(require("../Model/Cliente"));
 var ClienteController = /** @class */ (function (_super) {
     __extends(ClienteController, _super);
     function ClienteController() {
         return _super.call(this) || this;
     }
-    ClienteController.prototype.insert = function () {
+    ClienteController.prototype.insert = function (nome, cpf, DataNascimento) {
+        var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
+        return this.store(cliente, "Cliente", this.clientConverter()).then(function (d) { return d; });
     };
     ClienteController.prototype.update = function () {
+    };
+    ClienteController.prototype.clientConverter = function () {
+        return {
+            toFirestore: function (cliente) {
+                return {
+                    nome: cliente.Nome,
+                    cpf: cliente.CPF,
+                    DataNascimento: cliente.DataNascimento
+                };
+            },
+            fromFirestore: function (snapshot, options) {
+                var data = snapshot.data(options);
+                return new Cliente_1.default(data.nome, data.cpf, data.DataNascimento);
+            }
+        };
     };
     return ClienteController;
 }(Base_1.default));
