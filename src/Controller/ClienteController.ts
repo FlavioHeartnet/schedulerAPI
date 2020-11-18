@@ -21,6 +21,24 @@ export default class ClienteController extends Base{
 
     }
 
+    public async getAll(){
+        const resp = this.getAllbyCollection("Cliente")
+        
+        return resp.then((data)=>{
+            let result : Cliente[] = []
+            data.forEach((d)=>{
+                let Client : Cliente
+                const values = d.data()
+                Client = new Cliente(values.nome, values.cpf, values.DataNascimento)
+                Client.id = d.id
+                result.push(Client)
+               
+            })
+            return result
+        })
+
+    }
+
     private clientConverter(){
         return {
             toFirestore: function(cliente: Cliente) {

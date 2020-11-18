@@ -25,9 +25,25 @@ var ClienteController = /** @class */ (function (_super) {
     }
     ClienteController.prototype.insert = function (nome, cpf, DataNascimento) {
         var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
-        return this.store(cliente, "Cliente", this.clientConverter()).then(function (d) { return d; });
+        return this.store(cliente, ClienteController.Collection, this.clientConverter()).then(function (d) { return d; });
     };
-    ClienteController.prototype.update = function () {
+    ClienteController.prototype.update = function (id, nome, cpf, DataNascimento) {
+        var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
+        return this.edit(cliente, ClienteController.Collection, id, this.clientConverter());
+    };
+    ClienteController.prototype.getAll = function () {
+        var resp = this.getAllbyCollection("Cliente");
+        var result = [];
+        var Client;
+        resp.then(function (data) {
+            data.forEach(function (d) {
+                var values = d.data();
+                Client = new Cliente_1.default(values.nome, values.cpf, values.DataNascimento);
+                Client.id = d.id;
+                result.push(Client);
+            });
+        });
+        return result;
     };
     ClienteController.prototype.clientConverter = function () {
         return {
@@ -44,6 +60,7 @@ var ClienteController = /** @class */ (function (_super) {
             }
         };
     };
+    ClienteController.Collection = "Cliente";
     return ClienteController;
 }(Base_1.default));
 exports.default = ClienteController;

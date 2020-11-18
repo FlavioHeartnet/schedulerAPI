@@ -146,13 +146,14 @@ app.get('/', verify, function (req, res) { return __awaiter(void 0, void 0, void
     return __generator(this, function (_a) {
         result = {
             Status: true,
-            Nome: "Flavio"
+            Text: "API Logged"
         };
         res.json(result);
         return [2 /*return*/];
     });
 }); });
-app.post('/cliente', verify, function (req, res) {
+app.route("/Cliente")
+    .post(verify, function (req, res) {
     var client = new ClienteController_1.default();
     try {
         var nome = req.body.nome;
@@ -171,5 +172,28 @@ app.post('/cliente', verify, function (req, res) {
             ErroMessage: e
         });
     }
+})
+    .get(verify, function (req, res) {
+    var client = new ClienteController_1.default();
+    try {
+        var id = req.body.id;
+        var nome = req.body.nome;
+        var cpf = req.body.cpf;
+        var DataNascimento = req.body.DataNascimento;
+        client.update(id, nome, cpf, DataNascimento);
+        res.json({
+            Nome: nome,
+            cpf: cpf,
+            DataNascimento: DataNascimento
+        });
+    }
+    catch (e) {
+        res.send("id não informado ou inválido!");
+    }
+});
+app.get("/Clientes", verify, function (req, res) {
+    var client = new ClienteController_1.default();
+    console.log(client.getAll());
+    res.send("instrução finalizada");
 });
 app.listen(port, function () { return console.log("{rodando na porta http://localhost:" + port + "/)"); });

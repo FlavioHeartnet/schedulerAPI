@@ -3,6 +3,7 @@ import { db } from "../firebase"
 interface DatabaseStruct{
     store(data: any, collection: string, converter: any): Promise<boolean>
     edit(data: any, collection: string, doc: string, converter: any): Promise<boolean>
+    
 }
 
 export default class BaseDb implements DatabaseStruct {
@@ -33,6 +34,10 @@ export default class BaseDb implements DatabaseStruct {
         });
 
         return resp
+    }
+
+     protected getAllbyCollection(collection: string){
+        return db.collection(collection).get()
     }
 
 

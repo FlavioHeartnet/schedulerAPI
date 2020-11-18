@@ -117,19 +117,28 @@ app.get('/',verify, async (req, res) => {
     res.json(result)
 })
 
-app.route("Cliente")
+app.route("/Cliente")
 .post(verify, (req, res)=>{
     const client = new ClientController();
     try{
         const nome = req.body.nome
         const cpf = req.body.cpf
         const DataNascimento = req.body.DataNascimento
-        client.insert(nome, cpf, DataNascimento)
-        res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento
+        client.insert(nome, cpf, DataNascimento).then((a)=>{
+            if(a){
+                res.json({
+                    Nome: nome,
+                    cpf: cpf,
+                    DataNascimento: DataNascimento
+                })
+            }else{
+                res.json({
+                    Status: -1,
+                    Error: "Não foi possivel Inserir no momento"  
+                })
+            }
         })
+       
     
 
     }catch(e){
@@ -146,18 +155,35 @@ app.route("Cliente")
         const nome = req.body.nome
         const cpf = req.body.cpf
         const DataNascimento = req.body.DataNascimento
-        client.update(id, nome, cpf, DataNascimento)
-        res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento
-        })
+      client.update(id, nome, cpf, DataNascimento).then((a)=>{
+          if(a){
+            res.json({
+                Nome: nome,
+                cpf: cpf,
+                DataNascimento: DataNascimento
+            })
+          }else{
+            res.json({
+                Status: -1,
+                Error: "Não foi possivel atualizar no momento"  
+            })
+          }
+      })
+        
         
     }catch(e){
         res.send("id não informado ou inválido!")
     }
     
 
+})
+
+app.get("/Clientes", verify, (req, res)=>{
+    const client = new ClientController()
+    client.getAll().then((a) =>{
+        res.json(a)
+    })
+    
 })
 
 

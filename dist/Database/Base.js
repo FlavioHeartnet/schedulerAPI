@@ -24,6 +24,9 @@ var BaseDb = /** @class */ (function () {
         });
         return resp;
     };
+    BaseDb.prototype.getAllbyCollection = function (collection) {
+        return firebase_1.db.collection(collection).get();
+    };
     return BaseDb;
 }());
 exports.default = BaseDb;
