@@ -156,14 +156,23 @@ app.route("/Cliente")
     .post(verify, function (req, res) {
     var client = new ClienteController_1.default();
     try {
-        var nome = req.body.nome;
-        var cpf = req.body.cpf;
-        var DataNascimento = req.body.DataNascimento;
-        client.insert(nome, cpf, DataNascimento);
-        res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento
+        var nome_1 = req.body.nome;
+        var cpf_1 = req.body.cpf;
+        var DataNascimento_1 = req.body.DataNascimento;
+        client.insert(nome_1, cpf_1, DataNascimento_1).then(function (a) {
+            if (a) {
+                res.json({
+                    Nome: nome_1,
+                    cpf: cpf_1,
+                    DataNascimento: DataNascimento_1
+                });
+            }
+            else {
+                res.json({
+                    Status: -1,
+                    Error: "Não foi possivel Inserir no momento"
+                });
+            }
         });
     }
     catch (e) {
@@ -177,14 +186,23 @@ app.route("/Cliente")
     var client = new ClienteController_1.default();
     try {
         var id = req.body.id;
-        var nome = req.body.nome;
-        var cpf = req.body.cpf;
-        var DataNascimento = req.body.DataNascimento;
-        client.update(id, nome, cpf, DataNascimento);
-        res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento
+        var nome_2 = req.body.nome;
+        var cpf_2 = req.body.cpf;
+        var DataNascimento_2 = req.body.DataNascimento;
+        client.update(id, nome_2, cpf_2, DataNascimento_2).then(function (a) {
+            if (a) {
+                res.json({
+                    Nome: nome_2,
+                    cpf: cpf_2,
+                    DataNascimento: DataNascimento_2
+                });
+            }
+            else {
+                res.json({
+                    Status: -1,
+                    Error: "Não foi possivel atualizar no momento"
+                });
+            }
         });
     }
     catch (e) {
@@ -193,7 +211,8 @@ app.route("/Cliente")
 });
 app.get("/Clientes", verify, function (req, res) {
     var client = new ClienteController_1.default();
-    console.log(client.getAll());
-    res.send("instrução finalizada");
+    client.getAll().then(function (a) {
+        res.json(a);
+    });
 });
 app.listen(port, function () { return console.log("{rodando na porta http://localhost:" + port + "/)"); });
