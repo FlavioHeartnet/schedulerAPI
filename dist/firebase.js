@@ -7,7 +7,7 @@ exports.db = exports.auth = void 0;
 var firebase_admin_1 = __importDefault(require("firebase-admin"));
 var firebase_1 = __importDefault(require("firebase"));
 require("firebase/auth");
-var serviceAccount = require('../agendasalaoapi-d9e87e826822.json');
+var serviceAccount = require('../keyfile.json');
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(serviceAccount)
 });

@@ -64,9 +64,8 @@ var ClienteController = /** @class */ (function (_super) {
     ClienteController.prototype.insert = function (nome, cpf, DataNascimento) {
         var _this = this;
         var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
-        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('CPF', '==', cpf).get()
+        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
             .then(function (snapshot) {
-            console.log(snapshot.docs);
             if (snapshot.empty) {
                 return _this.store(cliente, ClienteController.Collection, _this.clientConverter()).then(function (d) {
                     return new ReponseClass_1.default(d, "");
@@ -81,8 +80,33 @@ var ClienteController = /** @class */ (function (_super) {
         return cpfVerify;
     };
     ClienteController.prototype.update = function (id, nome, cpf, DataNascimento) {
+        var _this = this;
         var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
-        return this.edit(cliente, ClienteController.Collection, id, this.clientConverter());
+        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
+            .then(function (snapshot) {
+            if (snapshot.empty) {
+                return _this.edit(cliente, ClienteController.Collection, id, _this.clientConverter())
+                    .then(function (a) {
+                    switch (a) {
+                        case true: return new ReponseClass_1.default(id, "");
+                        case false: return new ReponseClass_1.default("", "Não foi possivel atualizar no momento! tente novamente mais tarde ou contate o admin");
+                    }
+                });
+            }
+            var resp = new ReponseClass_1.default("", "");
+            snapshot.docs.map(function (a) {
+                if (a.id == id) {
+                    resp.error = "CPF inserido é o mesmo já cadastrado";
+                }
+                else {
+                    resp.error = "CPF já cadastrado em outro cliente";
+                }
+            });
+            return resp;
+        }).catch(function () {
+            return new ReponseClass_1.default("", "Não foi possivel validar os dados inseridos! tente novamente mais tarde ou contate o admin");
+        });
+        return cpfVerify;
     };
     ClienteController.prototype.getAll = function () {
         return __awaiter(this, void 0, void 0, function () {

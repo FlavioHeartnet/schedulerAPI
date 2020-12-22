@@ -190,7 +190,7 @@ app.route("/Cliente")
         var cpf_2 = req.body.cpf;
         var DataNascimento_2 = req.body.DataNascimento;
         client.update(id, nome_2, cpf_2, DataNascimento_2).then(function (a) {
-            if (a) {
+            if (a.id != "") {
                 res.json({
                     Nome: nome_2,
                     cpf: cpf_2,
@@ -200,7 +200,7 @@ app.route("/Cliente")
             else {
                 res.json({
                     Status: -1,
-                    Error: "Não foi possivel atualizar no momento"
+                    Error: a.error
                 });
             }
         });
@@ -215,7 +215,7 @@ app.get("/Clientes", verify, function (req, res) {
         res.json(a);
     });
 });
-app.post("/Clientes/:id", verify, function (req, res) {
+app.get("/clientesbyid/:id", verify, function (req, res) {
     var client = new ClienteController_1.default();
     client.getById(req.params.id).then(function (a) {
         res.json(a);

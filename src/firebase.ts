@@ -3,7 +3,7 @@ import fr from "firebase"
 import "firebase/auth"
 
 
-const serviceAccount = require('../agendasalaoapi-d9e87e826822.json');
+const serviceAccount = require('../keyfile.json');
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount)
 })
