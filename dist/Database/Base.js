@@ -8,9 +8,9 @@ var BaseDb = /** @class */ (function () {
         var docRef = firebase_1.db.collection(collection).withConverter(converter);
         var resp = docRef.add(data).then(function (d) {
             console.log(d.path);
-            return true;
+            return d.id;
         }).catch(function () {
-            return false;
+            return "";
         });
         return resp;
     };
@@ -26,6 +26,9 @@ var BaseDb = /** @class */ (function () {
     };
     BaseDb.prototype.getAllbyCollection = function (collection) {
         return firebase_1.db.collection(collection).get();
+    };
+    BaseDb.prototype.getDocbyId = function (collection, id) {
+        return firebase_1.db.collection(collection).doc(id).get();
     };
     return BaseDb;
 }());

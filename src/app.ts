@@ -83,10 +83,10 @@ app.post('/refresh',verify,  (req, res) => {
     if (!accessToken){
         return res.status(403).send()
     }
-    let payload
+    
     try{
         
-        payload = jwt.verify(accessToken, token)
+       jwt.verify(accessToken, token)
         
     }catch(e){
         res.status(401).send()
@@ -125,8 +125,9 @@ app.route("/Cliente")
         const cpf = req.body.cpf
         const DataNascimento = req.body.DataNascimento
         client.insert(nome, cpf, DataNascimento).then((a)=>{
-            if(a){
+            if(a.id != ""){
                 res.json({
+                    id: a.id,
                     Nome: nome,
                     cpf: cpf,
                     DataNascimento: DataNascimento
@@ -134,7 +135,7 @@ app.route("/Cliente")
             }else{
                 res.json({
                     Status: -1,
-                    Error: "Não foi possivel Inserir no momento"  
+                    Error: a.error 
                 })
             }
         })
@@ -156,7 +157,7 @@ app.route("/Cliente")
         const cpf = req.body.cpf
         const DataNascimento = req.body.DataNascimento
       client.update(id, nome, cpf, DataNascimento).then((a)=>{
-          if(a){
+          if(a.id != ""){
             res.json({
                 Nome: nome,
                 cpf: cpf,
@@ -165,7 +166,7 @@ app.route("/Cliente")
           }else{
             res.json({
                 Status: -1,
-                Error: "Não foi possivel atualizar no momento"  
+                Error: a.error  
             })
           }
       })
@@ -185,6 +186,16 @@ app.get("/Clientes", verify, (req, res)=>{
     })
     
 })
+
+app.get("/clientesbyid/:id", verify, (req, res)=>{
+    const client = new ClientController()
+    client.getById(req.params.id).then((a)=>{
+        res.json(a)
+    })
+
+})
+
+
 
 
 app.listen(port, () => console.log(`{rodando na porta http://localhost:${port}/)`))

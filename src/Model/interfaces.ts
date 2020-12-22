@@ -7,5 +7,8 @@
         DataNascimento: Date
          
     }
-
+    export interface IResponseClass {
+        id: string
+        error: string
+    }
 

@@ -1,22 +1,22 @@
 import { db } from "../firebase"
 
 interface DatabaseStruct{
-    store(data: any, collection: string, converter: any): Promise<boolean>
+    store(data: any, collection: string, converter: any): Promise<string>
     edit(data: any, collection: string, doc: string, converter: any): Promise<boolean>
     
 }
 
 export default class BaseDb implements DatabaseStruct {
 
-    store(data: any, collection: string, converter: any): Promise<boolean>{
+    store(data: any, collection: string, converter: any): Promise<string>{
         const docRef = db.collection(collection).withConverter(converter);
         
         const resp = docRef.add(data).then((d) =>{
-            console.log(d.path)
-            return true
+            
+            return d.id
 
         }).catch(()=>{
-            return false
+            return ""
         });
 
         return resp
@@ -25,8 +25,8 @@ export default class BaseDb implements DatabaseStruct {
     edit(data:any, collection: string, doc: string, converter: any): Promise<boolean>{
         const docRef = db.collection(collection).doc(doc).withConverter(converter);
 
-        const resp =  docRef.set(data).then((d) =>{
-            console.log(d)
+        const resp =  docRef.set(data).then(() =>{
+            
             return true
 
         }).catch(()=>{
@@ -38,6 +38,10 @@ export default class BaseDb implements DatabaseStruct {
 
      protected getAllbyCollection(collection: string){
         return db.collection(collection).get()
+    }
+
+    protected getDocbyId(collection: string, id: string){
+        return db.collection(collection).doc(id).get()
     }
 
 
