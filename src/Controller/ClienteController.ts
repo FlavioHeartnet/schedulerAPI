@@ -12,13 +12,13 @@ export default class ClienteController extends Base{
 
     public insert(nome: String, cpf: String, DataNascimento: Date){
         const cliente = new Cliente(nome, cpf, DataNascimento)
-        let cpfVerify = db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
+        let cpfVerify = db.collection(ClienteController.Collection).where('CPF', '==', cpf).get()
         .then((snapshot) => {
             if(snapshot.empty){
 
                return this.store(cliente, ClienteController.Collection, this.clientConverter()).then((d) => 
                  new ReponseClass(d,"")
-                )
+                ).catch(err => new ReponseClass("","Erro ao buscar documentos"))
 
             }else{
 
@@ -36,7 +36,7 @@ export default class ClienteController extends Base{
 
     public update(id: string, nome: String, cpf: String, DataNascimento: Date){
         const cliente = new Cliente(nome, cpf, DataNascimento)
-        let cpfVerify = db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
+        let cpfVerify = db.collection(ClienteController.Collection).where('CPF', '==', cpf).get()
         .then(snapshot => {
             if(snapshot.empty){
                 return this.edit(cliente, ClienteController.Collection, id, this.clientConverter())
@@ -102,9 +102,9 @@ export default class ClienteController extends Base{
         return {
             toFirestore: function(cliente: Cliente) {
                 return {
-                    nome: cliente.Nome,
-                    cpf: cliente.CPF,
-                    DataNascimento: cliente.DataNascimento
+                    NOME: cliente.Nome,
+                    CPF: cliente.CPF,
+                    DATANASCIMENTO: cliente.DataNascimento
                     }
             },
             fromFirestore: function(snapshot: any, options: any){

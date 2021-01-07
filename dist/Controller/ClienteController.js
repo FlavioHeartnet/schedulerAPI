@@ -64,12 +64,12 @@ var ClienteController = /** @class */ (function (_super) {
     ClienteController.prototype.insert = function (nome, cpf, DataNascimento) {
         var _this = this;
         var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
-        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
+        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('CPF', '==', cpf).get()
             .then(function (snapshot) {
             if (snapshot.empty) {
                 return _this.store(cliente, ClienteController.Collection, _this.clientConverter()).then(function (d) {
                     return new ReponseClass_1.default(d, "");
-                });
+                }).catch(function (err) { return new ReponseClass_1.default("", "Erro ao buscar documentos"); });
             }
             else {
                 return new ReponseClass_1.default("", "CPF já cadastrado");
@@ -82,7 +82,7 @@ var ClienteController = /** @class */ (function (_super) {
     ClienteController.prototype.update = function (id, nome, cpf, DataNascimento) {
         var _this = this;
         var cliente = new Cliente_1.default(nome, cpf, DataNascimento);
-        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('cpf', '==', cpf).get()
+        var cpfVerify = firebase_1.db.collection(ClienteController.Collection).where('CPF', '==', cpf).get()
             .then(function (snapshot) {
             if (snapshot.empty) {
                 return _this.edit(cliente, ClienteController.Collection, id, _this.clientConverter())
@@ -151,9 +151,9 @@ var ClienteController = /** @class */ (function (_super) {
         return {
             toFirestore: function (cliente) {
                 return {
-                    nome: cliente.Nome,
-                    cpf: cliente.CPF,
-                    DataNascimento: cliente.DataNascimento
+                    NOME: cliente.Nome,
+                    CPF: cliente.CPF,
+                    DATANASCIMENTO: cliente.DataNascimento
                 };
             },
             fromFirestore: function (snapshot, options) {

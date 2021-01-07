@@ -12,6 +12,11 @@ let currentUser = {
     username: "",
 }
 
+/*process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Application specific logging, throwing an error, or other logic here
+  });*/
+
 const app = express()
 const port = 3000
 const env = dotenv.config()
@@ -45,7 +50,8 @@ const verify = async (req: any, res: any, next: any) => {
 
 app.post('/login', async (req, res) => {
 
-    await auth.signInWithEmailAndPassword(req.body.email, req.body.password).then((a) => {
+    try{
+        await auth.signInWithEmailAndPassword(req.body.email, req.body.password).then((a) => {
 
             //console.log(a.user)
             currentUser.username = req.body.email
@@ -73,7 +79,11 @@ app.post('/login', async (req, res) => {
         token: accessToken,
         User: currentUser
     })
-
+    }catch(e){
+        res.json({
+            Error: "Dados inseridos incorretamente verifique o formato da request desta API: /login"
+        })
+    }
 
 })
 app.post('/refresh',verify,  (req, res) => {
@@ -119,8 +129,9 @@ app.get('/',verify, async (req, res) => {
 
 app.route("/Cliente")
 .post(verify, (req, res)=>{
-    const client = new ClientController();
+    
     try{
+        const client = new ClientController();
         const nome = req.body.nome
         const cpf = req.body.cpf
         const DataNascimento = req.body.DataNascimento
@@ -138,6 +149,8 @@ app.route("/Cliente")
                     Error: a.error 
                 })
             }
+        }).catch((e)=>{
+            console.log(e)
         })
        
     
@@ -145,7 +158,7 @@ app.route("/Cliente")
     }catch(e){
         console.log(e)
         res.json({
-            ErroMessage: e
+            Error: "Dados inseridos incorretamente verifique o formato da request desta API: /Cliente - POST: inserir"
         })
     }
 })
@@ -173,7 +186,7 @@ app.route("/Cliente")
         
         
     }catch(e){
-        res.send("id não informado ou inválido!")
+        res.send("Dados inválidos ou não informado corretamente!")
     }
     
 

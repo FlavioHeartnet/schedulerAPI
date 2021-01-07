@@ -50,6 +50,10 @@ var firebase_1 = require("./firebase");
 var currentUser = {
     username: "",
 };
+/*process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Application specific logging, throwing an error, or other logic here
+  });*/
 var app = express_1.default();
 var port = 3000;
 var env = dotenv_1.default.config();
@@ -91,20 +95,22 @@ var verify = function (req, res, next) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var accessToken;
+    var accessToken, e_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, firebase_1.auth.signInWithEmailAndPassword(req.body.email, req.body.password).then(function (a) {
-                    //console.log(a.user)
-                    currentUser.username = req.body.email;
-                }).catch(function (error) {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    res.json({
-                        Error: errorMessage,
-                        ErrorCode: errorCode
-                    });
-                })];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, firebase_1.auth.signInWithEmailAndPassword(req.body.email, req.body.password).then(function (a) {
+                        //console.log(a.user)
+                        currentUser.username = req.body.email;
+                    }).catch(function (error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        res.json({
+                            Error: errorMessage,
+                            ErrorCode: errorCode
+                        });
+                    })];
             case 1:
                 _a.sent();
                 accessToken = "";
@@ -116,7 +122,14 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                     token: accessToken,
                     User: currentUser
                 });
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                e_3 = _a.sent();
+                res.json({
+                    Error: "Dados inseridos incorretamente verifique o formato da request desta API: /login"
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
@@ -153,8 +166,8 @@ app.get('/', verify, function (req, res) { return __awaiter(void 0, void 0, void
 }); });
 app.route("/Cliente")
     .post(verify, function (req, res) {
-    var client = new ClienteController_1.default();
     try {
+        var client = new ClienteController_1.default();
         var nome_1 = req.body.nome;
         var cpf_1 = req.body.cpf;
         var DataNascimento_1 = req.body.DataNascimento;
@@ -173,6 +186,8 @@ app.route("/Cliente")
                     Error: a.error
                 });
             }
+        }).catch(function (e) {
+            console.log(e);
         });
     }
     catch (e) {
