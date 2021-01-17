@@ -193,7 +193,7 @@ app.route("/Cliente")
     catch (e) {
         console.log(e);
         res.json({
-            ErroMessage: e
+            Error: "Dados inseridos incorretamente verifique o formato da request desta API: /Cliente - POST: inserir"
         });
     }
 })
@@ -221,7 +221,7 @@ app.route("/Cliente")
         });
     }
     catch (e) {
-        res.send("id não informado ou inválido!");
+        res.send("Dados inválidos ou não informado corretamente!");
     }
 });
 app.get("/Clientes", verify, function (req, res) {

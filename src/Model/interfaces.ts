@@ -12,3 +12,10 @@
         error: string
     }
 
+    export interface IAgendamentos {
+        Data: Date
+        Data_Termino?: Date
+        Observacao: String
+        Serv_Realizado: boolean
+    }
+
