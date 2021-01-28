@@ -2,8 +2,8 @@ import express from "express"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
-//import {auth, requiresAuth } from "express-openid-connect"
 import ClientController from "./Controller/ClienteController"
+import AgendamentosController from "./Controller/AgendamentosController"
 import jwt from "jsonwebtoken"
 import {auth} from "./firebase"
 
@@ -209,7 +209,62 @@ app.get("/clientesbyid/:id", verify, (req, res)=>{
 })
 
 //Agendamentos
+app.post("/agendamentos/insert", verify, (req, res)=>{
+    try{
+        const agendamento = new AgendamentosController()
+        const Data = req.body.Data
+        const DataTermino = null
+        const Serv_realizado = false
+        const Observacao = req.body.Observacao
+        agendamento.insert(Data, Observacao, Serv_realizado, new Date()).then(a =>{
+            if(a.id != ""){
+                res.json({
+                    id: a.id,
+                    Data: Data,
+                    Observacao: Observacao
+                })
+            }else{
+                res.json({
+                    Status: -1,
+                    Error: a.error  
+                })
+            }
+        })
 
+    }catch(e){
+        res.send("Dados inválidos ou não informado corretamente!")
+    }
+    
+
+})
+
+app.post("/agendamentos/update", verify, (req, res) =>{
+    try{
+        const agendamento = new AgendamentosController()
+        const id = req.body.id
+        const Data = req.body.Data
+        const Serv_realizado = req.body.Serv_realizado
+        const Observacao = req.body.Observacao
+        agendamento.update(id, Data, new Date(),Observacao, Serv_realizado).then(a =>{
+            if(a.id != ""){
+                res.json({
+                    id: a.id,
+                    Data: Data,
+                    Observacao: Observacao
+                })
+            }else{
+                res.json({
+                    Status: -1,
+                    Error: a.error  
+                })
+            }
+        })
+
+    }catch(e){
+        res.send("Dados inválidos ou não informado corretamente!")
+    }
+
+})
 
 
 

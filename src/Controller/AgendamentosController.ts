@@ -11,7 +11,7 @@ export default class AgendamentosController extends Base{
         super()
     }
 
-    public insert(Data: Date, Data_Termino: Date, Observacao:String, Serv_Realizado: boolean){
+    public insert(Data: Date, Observacao:String, Serv_Realizado: boolean, Data_Termino: Date){
             const Agendamento: Agendamentos = new Agendamentos(Data, Observacao,Serv_Realizado, Data_Termino)
 
             return this.store(Agendamento, AgendamentosController.Collection, this.agendamentoConverter()).then((d) => 
