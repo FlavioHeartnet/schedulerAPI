@@ -236,4 +236,5 @@ app.get("/clientesbyid/:id", verify, function (req, res) {
         res.json(a);
     });
 });
+//Agendamentos
 app.listen(port, function () { return console.log("{rodando na porta http://localhost:" + port + "/)"); });
