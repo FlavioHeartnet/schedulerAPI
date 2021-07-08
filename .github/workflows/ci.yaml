@@ -1,0 +1,17 @@
+name: ci-typescript-workflow
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  check-application:
+    runs-on: macos-11.0
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm test
+      - run: npm run start
