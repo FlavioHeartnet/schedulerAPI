@@ -1,4 +1,4 @@
-import {IResponseClass} from './interfaces';
+import { IResponseClass } from './interfaces'
 
 // eslint-disable-next-line require-jsdoc
 export default class ResponseClass implements IResponseClass {

@@ -1,48 +1,46 @@
-import { db } from "../firebase"
+import { db } from '../firebase'
 
-interface DatabaseStruct{
-    store(data: any, collection: string, converter: any): Promise<string>
-    edit(data: any, collection: string, doc: string, converter: any): Promise<boolean>
-    
+interface DatabaseStruct {
+  store(data, collection: string, converter): Promise<string>
+  edit(data, collection: string, doc: string, converter): Promise<boolean>
 }
 
 export default class BaseDb implements DatabaseStruct {
+  store(data, collection: string, converter): Promise<string> {
+    const docRef = db.collection(collection).withConverter(converter)
 
-    store(data: any, collection: string, converter: any): Promise<string>{
-        const docRef = db.collection(collection).withConverter(converter);
-        
-        const resp = docRef.add(data).then((d) =>{
-            
-            return d.id
+    const resp = docRef
+      .add(data)
+      .then((d) => {
+        return d.id
+      })
+      .catch(() => {
+        return ''
+      })
 
-        }).catch(()=>{
-            return ""
-        });
+    return resp
+  }
 
-        return resp
-    }
+  edit(data, collection: string, doc: string, converter): Promise<boolean> {
+    const docRef = db.collection(collection).doc(doc).withConverter(converter)
 
-    edit(data:any, collection: string, doc: string, converter: any): Promise<boolean>{
-        const docRef = db.collection(collection).doc(doc).withConverter(converter);
+    const resp = docRef
+      .set(data)
+      .then(() => {
+        return true
+      })
+      .catch(() => {
+        return false
+      })
 
-        const resp =  docRef.set(data).then(() =>{
-            
-            return true
+    return resp
+  }
 
-        }).catch(()=>{
-            return false
-        });
+  protected getAllbyCollection(collection: string) {
+    return db.collection(collection).get()
+  }
 
-        return resp
-    }
-
-     protected getAllbyCollection(collection: string){
-        return db.collection(collection).get()
-    }
-
-    protected getDocbyId(collection: string, id: string){
-        return db.collection(collection).doc(id).get()
-    }
-
-
+  protected getDocbyId(collection: string, id: string) {
+    return db.collection(collection).doc(id).get()
+  }
 }
