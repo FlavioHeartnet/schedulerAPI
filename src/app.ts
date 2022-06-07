@@ -1,8 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import ClientController from './Controller/ClienteController'
-import AgendamentosController from './Controller/AgendamentosController'
+import ClientController from './Controller/customerController'
+import AgendamentosController from './Controller/appointmentController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
 
@@ -26,7 +26,7 @@ const verify = async (req, res, next) => {
     const accessToken: string = req.header('Authorization').substr(7)
     if (!accessToken) {
       return res.json({
-        Error: 'Não ha token valido ativo ',
+        Error: 'Não ha token um valido',
       })
     }
     try {
