@@ -1,21 +1,19 @@
 
+export interface Pessoa {
+        nome: String
+        cpf: String
+        dataNascimento: Date
 
-
-    export interface Pessoa {
-        Nome: String
-        CPF: String
-        DataNascimento: Date
-         
     }
-    export interface IResponseClass {
+export interface IResponseClass {
         id: string
         error: string
     }
 
-    export interface IAgendamentos {
-        Data: Date
-        Data_Termino?: Date
-        Observacao: String
-        Serv_Realizado: boolean
+export interface IAgendamentos {
+        data: Date
+        dataTermino?: Date
+        observacao: String
+        servRealizado: boolean
     }
 

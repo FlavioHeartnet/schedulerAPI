@@ -1,5 +1,5 @@
 node_modules
 keyfile.json
 .DS_Store
-package-lock
+package-lock.json
 dist

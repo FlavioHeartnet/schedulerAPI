@@ -1,9 +1,12 @@
-import { IAgendamentos } from "./interfaces"
+import {IAgendamentos} from './interfaces';
 
-export default class Agendamentos implements IAgendamentos{
-    public id: String = ""
-    constructor(public Data:Date, public Observacao: String, public Serv_Realizado: boolean, public Data_Termino?:Date){
-
+// eslint-disable-next-line require-jsdoc
+export default class Agendamentos implements IAgendamentos {
+    public id: String = '';
+    // eslint-disable-next-line require-jsdoc
+    constructor(
+        public data:Date,
+        public observacao: String,
+        public servRealizado: boolean,
+        public dataTermino?:Date) {}
     }
-
-}
