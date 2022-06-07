@@ -1,16 +1,20 @@
-export interface Pessoa {
-  nome: String
-  cpf: String
-  dataNascimento: Date
+export interface ICustomer {
+  name: String;
+  registrationId: String;
+  birthdate: Date;
 }
-export interface IResponseClass {
+export interface IResponseError {
   id: string
   error: string
 }
 
-export interface IAgendamentos {
-  data: Date
-  dataTermino?: Date
-  observacao: String
-  servRealizado: boolean
+export interface IResponseSuccess {
+  message: String
+}
+
+export interface IAppointment {
+  date: Date
+  serviceDoneAt: Date
+  notes: String
+  isDone: boolean
 }
