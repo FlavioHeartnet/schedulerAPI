@@ -1,8 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import ClientController from './Controller/customerController'
-import AgendamentosController from './Controller/appointmentController'
+import ClientController from './controller/customerController'
+import AgendamentosController from './controller/appointmentController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
 
@@ -128,9 +128,8 @@ app
               DataNascimento: DataNascimento,
             })
           } else {
-            res.json({
-              Status: -1,
-              Error: a.error,
+            res.sendStatus(500).json({
+              error: a.error,
             })
           }
         })
@@ -194,7 +193,7 @@ app.post('/agendamentos/insert', verify, (req, res) => {
     const servRealizado = false
     const observacao = req.body.Observacao
     agendamento
-      .insert(data, observacao, servRealizado, new Date())
+      .insert(data, observacao, servRealizado)
       .then((a) => {
         if (a.id != '') {
           res.json({
