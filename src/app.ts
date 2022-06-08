@@ -5,6 +5,7 @@ import ClientController from './controller/customerController'
 import AgendamentosController from './controller/appointmentController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 const currentUser = {
   username: '',
@@ -43,8 +44,7 @@ const verify = async (req, res, next) => {
 
 app.post('/login', async (req, res) => {
   try {
-    await auth
-      .signInWithEmailAndPassword(req.body.email, req.body.password)
+    await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
       .then(() => {
         currentUser.username = req.body.email
       })
@@ -70,7 +70,6 @@ app.post('/login', async (req, res) => {
     })
   } catch (e) {
     res.json({
-      // eslint-disable-next-line max-len
       Error:
         'Dados inseridos incorretamente verifique o formato da request desta API: /login',
     })
@@ -139,7 +138,6 @@ app
     } catch (e) {
       console.log(e)
       res.json({
-        // eslint-disable-next-line max-len
         Error:
           'Dados inseridos incorretamente verifique o formato da request desta API: /Cliente - POST: inserir',
       })
@@ -192,22 +190,20 @@ app.post('/agendamentos/insert', verify, (req, res) => {
     const data = req.body.Data
     const servRealizado = false
     const observacao = req.body.Observacao
-    agendamento
-      .insert(data, observacao, servRealizado)
-      .then((a) => {
-        if (a.id != '') {
-          res.json({
-            id: a.id,
-            Data: data,
-            Observacao: observacao,
-          })
-        } else {
-          res.json({
-            Status: -1,
-            Error: a.error,
-          })
-        }
-      })
+    agendamento.insert(data, observacao, servRealizado).then((a) => {
+      if (a.message != '') {
+        res.json({
+          id: a.code,
+          Data: data,
+          Observacao: observacao,
+        })
+      } else {
+        res.json({
+          Status: -1,
+          Error: a.message,
+        })
+      }
+    })
   } catch (e) {
     res.send('Dados inválidos ou não informado corretamente!')
   }
@@ -223,16 +219,16 @@ app.post('/agendamentos/update', verify, (req, res) => {
     agendamento
       .update(id, data, new Date(), Observacao, servRealizado)
       .then((a) => {
-        if (a.id != '') {
+        if (a?.message != '') {
           res.json({
-            id: a.id,
+            id: a?.message,
             Data: data,
             Observacao: Observacao,
           })
         } else {
           res.json({
             Status: -1,
-            Error: a.error,
+            Error: a?.message,
           })
         }
       })

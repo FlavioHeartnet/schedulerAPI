@@ -1,46 +1,91 @@
-import { addDoc, collection, doc, FirestoreError, getDocs, query, QueryConstraint, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  DocumentData,
+  DocumentReference,
+  FirestoreError,
+  getDocs,
+  query,
+  QueryConstraint,
+  QuerySnapshot,
+  setDoc,
+} from 'firebase/firestore'
 import { db } from '../firebase'
-import ResponseError from '../model/responseError';
-import ResponseSuccess from '../model/responseSuccess';
-import { localizeErrorsMap } from './firestoreException';
+import ResponseError from '../model/responseError'
+import ResponseSuccess from '../model/responseSuccess'
+import { localizeErrorsMap } from './firestoreException'
 
 interface DatabaseStruct {
-  store(data, collection: string, converter): Promise<string>
-  edit(data, collection: string, doc: string, converter): Promise<boolean>
+  store(
+    data,
+    collection: string,
+    converter
+  ): Promise<ResponseSuccess | ResponseError>
+  edit(
+    data,
+    collection: string,
+    doc: string,
+    converter
+  ): Promise<ResponseSuccess | ResponseError>
 }
 
 export default class FirebaseAdapter implements DatabaseStruct {
-  async store(data, collectionName: string): Promise<any> {
+  async store(
+    data,
+    collectionName: string
+  ): Promise<ResponseSuccess | ResponseError> {
     try {
-      return { message: (await this.insertDocument(collectionName, data)).id } as ResponseSuccess
+      return {
+        message: (await this.insertDocument(collectionName, data)).id,
+      } as ResponseSuccess
     } catch (e) {
       const exception: FirestoreError = e
-      return { code: exception.code, error: localizeErrorsMap(exception) } as ResponseError
+      return {
+        code: exception.code,
+        message: localizeErrorsMap(exception),
+      } as ResponseError
     }
   }
 
-  async insertDocument(collectionName: string, data: any) {
-    return await addDoc(collection(db, collectionName), data);
+  async insertDocument(
+    collectionName: string,
+    data: object
+  ): Promise<DocumentReference> {
+    return await addDoc(collection(db, collectionName), data)
   }
 
-  async edit(data, collectionName: string, id: string, converter): Promise<any> {
+  async edit(
+    data,
+    collectionName: string,
+    id: string
+  ): Promise<ResponseSuccess | ResponseError> {
     try {
-      const userRef = doc(db, collectionName, id).withConverter(converter);
-      await setDoc(userRef, data);
+      await this.editDocument(collectionName, id, data)
       return { message: id } as ResponseSuccess
     } catch (e) {
       const exception: FirestoreError = e
-      return { code: exception.code, error: localizeErrorsMap(exception) } as ResponseError
+      return {
+        code: exception.code,
+        message: localizeErrorsMap(exception),
+      } as ResponseError
     }
   }
 
-  protected async getAllbyCollection(colletionName: string) {
-    return await getDocs(query(collection(db, colletionName)));
+  async editDocument(collectionName: string, id: string, data: object) {
+    await setDoc(doc(collection(db, collectionName), id), data)
   }
 
-  protected async getDocbyId(colletionName: string, where: QueryConstraint[]) {
-    return await getDocs(query(collection(db, colletionName), ...where));
+  protected async getAllbyCollection(
+    colletionName: string
+  ): Promise<QuerySnapshot<DocumentData>> {
+    return await getDocs(query(collection(db, colletionName)))
+  }
+
+  protected async getDocbyId(
+    colletionName: string,
+    where: QueryConstraint[]
+  ): Promise<QuerySnapshot<DocumentData>> {
+    return await getDocs(query(collection(db, colletionName), ...where))
   }
 }
-
-

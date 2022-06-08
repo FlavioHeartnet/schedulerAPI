@@ -1,11 +1,11 @@
 export interface ICustomer {
-  name: String;
-  registrationId: String;
-  birthdate: Date;
+  name: String
+  registrationId: String
+  birthdate: Date
 }
 export interface IResponseError {
   code: string
-  error: string
+  message: string
 }
 
 export interface IResponseSuccess {

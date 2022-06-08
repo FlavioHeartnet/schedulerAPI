@@ -1,5 +1,5 @@
-import { IResponseSuccess } from "./interfaces";
+import { IResponseSuccess } from './interfaces'
 
 export default class ResponseSuccess implements IResponseSuccess {
-    message: String;
+  message: String
 }

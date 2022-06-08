@@ -6,5 +6,5 @@ export default class Customer implements ICustomer {
     public name: String = '',
     public registrationId: String = '',
     public birthdate: Date
-  ) { }
+  ) {}
 }

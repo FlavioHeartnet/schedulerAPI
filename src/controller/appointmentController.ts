@@ -10,16 +10,12 @@ export default class AgendamentosController extends Base {
     super()
   }
 
-  public insert(
-    date: Date,
-    notes: String,
-    isDone: boolean,
-  ) {
+  public insert(date: Date, notes: String, isDone: boolean) {
     const appointment: Appointment = {
       date: date,
       notes: notes,
       isDone: isDone,
-      serviceDoneAt: new Date()
+      serviceDoneAt: new Date(),
     }
 
     return this.store(
@@ -42,7 +38,7 @@ export default class AgendamentosController extends Base {
       date: date,
       serviceDoneAt: serviceDoneAt,
       notes: notes,
-      isDone: isDone
+      isDone: isDone,
     }
 
     return this.edit(
@@ -97,6 +93,4 @@ export default class AgendamentosController extends Base {
 
     return Agenda
   }
-
-
 }
