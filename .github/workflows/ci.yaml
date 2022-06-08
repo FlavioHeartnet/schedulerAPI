@@ -2,7 +2,7 @@ name: ci-typescript-workflow
 on:
   pull_request:
     branches:
-      - develop
+      - master
 
 jobs:
   check-application:
