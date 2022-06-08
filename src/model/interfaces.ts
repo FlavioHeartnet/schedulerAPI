@@ -4,7 +4,7 @@ export interface ICustomer {
   birthdate: Date;
 }
 export interface IResponseError {
-  id: string
+  code: string
   error: string
 }
 

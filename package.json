@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsnd src/app.ts",
     "build": "tsc",
     "prestart": "npm run build",
@@ -12,7 +11,8 @@
     "prebuild": "eslint -c .eslintrc.json --fix",
     "format": "npx prettier --write src/",
     "format:analysis": "npx prettier --debug-check --list-different src/",
-    "lint": "npx eslint \"src/**\" --fix"
+    "lint": "npx eslint \"src/**\" --fix",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +32,7 @@
     "ts-jest": "^28.0.4"
   },
   "devDependencies": {
+    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
