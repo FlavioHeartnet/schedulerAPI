@@ -191,18 +191,16 @@ app.post('/agendamentos/insert', verify, (req, res) => {
     const servRealizado = false
     const observacao = req.body.Observacao
     agendamento.insert(data, observacao, servRealizado).then((a) => {
-      if (a.message != '') {
-        res.json({
-          id: a.code,
-          Data: data,
-          Observacao: observacao,
-        })
-      } else {
-        res.json({
-          Status: -1,
-          Error: a.message,
-        })
-      }
+      res.json({
+        id: a.message,
+        Data: data,
+        Observacao: observacao,
+      })
+    }).catch(error => {
+      res.sendStatus(500).json({
+        Status: -1,
+        Error: error.message,
+      })
     })
   } catch (e) {
     res.send('Dados inválidos ou não informado corretamente!')
@@ -219,18 +217,16 @@ app.post('/agendamentos/update', verify, (req, res) => {
     agendamento
       .update(id, data, new Date(), Observacao, servRealizado)
       .then((a) => {
-        if (a?.message != '') {
-          res.json({
-            id: a?.message,
-            Data: data,
-            Observacao: Observacao,
-          })
-        } else {
-          res.json({
-            Status: -1,
-            Error: a?.message,
-          })
-        }
+        res.json({
+          id: a?.message,
+          Data: data,
+          Observacao: Observacao,
+        })
+      }).catch(error => {
+        res.sendStatus(500).json({
+          Status: -1,
+          Error: error.message,
+        })
       })
   } catch (e) {
     res.send('Dados inválidos ou não informado corretamente!')

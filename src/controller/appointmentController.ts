@@ -1,7 +1,8 @@
-import ReponseClass from '../model/responseError'
 import Base from '../database/firebaseAdapter'
 import Agendamentos from '../model/appointments'
 import Appointment from '../model/appointments'
+import ResponseSuccess from '../model/responseSuccess'
+import ResponseError from '../model/responseError'
 
 export default class AgendamentosController extends Base {
   public static Collection: string = 'Agendamentos'
@@ -20,11 +21,10 @@ export default class AgendamentosController extends Base {
 
     return this.store(
       appointment,
-      AgendamentosController.Collection,
-      this.agendamentoConverter()
+      AgendamentosController.Collection
     )
-      .then((d) => new ReponseClass(d, ''))
-      .catch(() => new ReponseClass('', 'Erro ao criar agendamento'))
+      .then((result) => result as ResponseSuccess)
+      .catch((error) => error as ResponseError)
   }
 
   public update(
@@ -44,53 +44,27 @@ export default class AgendamentosController extends Base {
     return this.edit(
       Agendamento,
       AgendamentosController.Collection,
-      id,
-      this.agendamentoConverter()
-    ).then((a) => {
-      switch (a) {
-        case true:
-          return new ReponseClass()
-
-        case false:
-          return new ReponseClass(
-            '',
-            'Não foi possivel atualizar seu agendamento no momento! tente novamente mais tarde ou contate o admin'
-          )
-      }
-    })
+      id
+    ).then((result) => result as ResponseSuccess)
+      .catch((error) => error as ResponseError)
   }
 
-  public async getAll(): Promise<Agendamentos[]> {
-    const resp = this.getAllbyCollection(AgendamentosController.Collection)
+  public getAll(): Promise<ResponseSuccess | ResponseError> {
 
-    const data = await resp
-    const result: Agendamentos[] = []
-    data.forEach((d) => {
-      const values = d.data()
-      const Agenda: Agendamentos = new Agendamentos(
-        values.data,
-        values.observacao,
-        values.servRealizado,
-        values.dataTermino
-      )
-      Agenda.id = d.id
-      result.push(Agenda)
-    })
+    const data = this.getAllbyCollection(AgendamentosController.Collection)
+    return data.then((result) => result as ResponseSuccess)
+      .catch((error) => error as ResponseError)
+  }
+
+  public getById(id: string): Promise<ResponseSuccess | ResponseError> {
+    return this.getDocbyId(AgendamentosController.Collection, id)
+      .then((result) => this.convertToAppointmentList(result as ResponseSuccess))
+      .catch((error) => error as ResponseError)
+  }
+
+  private convertToAppointmentList(result: ResponseSuccess) {
+    result = result as ResponseSuccess
+    result.snapshop = result.snapshop as Appointment[]
     return result
-  }
-
-  public async getById(id: string): Promise<Agendamentos> {
-    const values = await (
-      await this.getDocbyId(AgendamentosController.Collection, id)
-    ).data()
-    const Agenda: Agendamentos = new Agendamentos(
-      values!.data,
-      values!.observacao,
-      values!.servRealizado,
-      values!.dataTermino
-    )
-    Agenda.id = values!.id
-
-    return Agenda
   }
 }
