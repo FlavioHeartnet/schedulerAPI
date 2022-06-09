@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import ClientController from './controller/customerController'
+import CustomerController from './controller/customerController'
 import AgendamentosController from './controller/appointmentController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
@@ -112,31 +112,27 @@ app
   .route('/Cliente')
   .post(verify, (req, res) => {
     try {
-      const client = new ClientController()
+      const client = new CustomerController()
       const nome = req.body.nome
       const cpf = req.body.cpf
       const DataNascimento = req.body.DataNascimento
       client
         .insert(nome, cpf, DataNascimento)
         .then((a) => {
-          if (a.id != '') {
-            res.json({
-              id: a.id,
-              Nome: nome,
-              cpf: cpf,
-              DataNascimento: DataNascimento,
-            })
-          } else {
-            res.sendStatus(500).json({
-              error: a.error,
-            })
-          }
+          res.json({
+            id: a.message,
+            Nome: nome,
+            cpf: cpf,
+            DataNascimento: DataNascimento,
+          })
         })
-        .catch((e) => {
-          console.log(e)
+        .catch((error) => {
+          res.sendStatus(500).json({
+            Status: -1,
+            Error: error.message,
+          })
         })
     } catch (e) {
-      console.log(e)
       res.json({
         Error:
           'Dados inseridos incorretamente verifique o formato da request desta API: /Cliente - POST: inserir',
@@ -144,40 +140,41 @@ app
     }
   })
   .get(verify, (req, res) => {
-    const client = new ClientController()
+    const client = new CustomerController()
     try {
       const id = req.body.id
       const nome = req.body.nome
       const cpf = req.body.cpf
       const DataNascimento = req.body.DataNascimento
-      client.update(id, nome, cpf, DataNascimento).then((a) => {
-        if (a.id != '') {
+      client
+        .update(id, nome, cpf, DataNascimento)
+        .then((a) => {
           res.json({
             Nome: nome,
             cpf: cpf,
             DataNascimento: DataNascimento,
           })
-        } else {
-          res.json({
+        })
+        .catch((error) => {
+          res.sendStatus(500).json({
             Status: -1,
-            Error: a.error,
+            Error: error.message,
           })
-        }
-      })
+        })
     } catch (e) {
       res.send('Dados inválidos ou não informado corretamente!')
     }
   })
 
 app.get('/Clientes', verify, (_req, res) => {
-  const client = new ClientController()
+  const client = new CustomerController()
   client.getAll().then((a) => {
     res.json(a)
   })
 })
 
 app.get('/clientesbyid/:id', verify, (req, res) => {
-  const client = new ClientController()
+  const client = new CustomerController()
   client.getById(req.params.id).then((a) => {
     res.json(a)
   })

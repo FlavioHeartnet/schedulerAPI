@@ -3,14 +3,18 @@ import Appointment from '../model/appointments'
 import ResponseSuccess from '../model/responseSuccess'
 import ResponseError from '../model/responseError'
 
-export default class AgendamentosController extends Base {
-  public static Collection: string = 'Agendamentos'
+export default class AppointmentController extends Base {
+  public static Collection: string = 'Appointment'
 
   constructor() {
     super()
   }
 
-  public insert(date: Date, notes: String, isDone: boolean) {
+  public insert(
+    date: Date,
+    notes: String,
+    isDone: boolean
+  ): Promise<ResponseSuccess | ResponseError> {
     const appointment: Appointment = {
       date: date,
       notes: notes,
@@ -29,7 +33,7 @@ export default class AgendamentosController extends Base {
     serviceDoneAt: Date,
     notes: String,
     isDone: boolean
-  ) {
+  ): Promise<ResponseSuccess | ResponseError> {
     const Agendamento: Appointment = {
       date: date,
       serviceDoneAt: serviceDoneAt,

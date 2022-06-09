@@ -1,4 +1,5 @@
 export interface ICustomer {
+  id?: String
   name: String
   registrationId: String
   birthdate: Date
