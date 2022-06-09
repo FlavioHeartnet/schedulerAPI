@@ -10,8 +10,10 @@ import {
   QueryConstraint,
   QuerySnapshot,
   setDoc,
+  where,
 } from 'firebase/firestore'
 import { db } from '../firebase'
+import Appointment from '../model/appointments'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
@@ -37,14 +39,10 @@ export default class FirebaseAdapter implements DatabaseStruct {
   ): Promise<ResponseSuccess | ResponseError> {
     try {
       return {
-        message: (await this.insertDocument(collectionName, data)).id,
+        message: (await this.insertDocument(collectionName, data)).id, snapshop: []
       } as ResponseSuccess
     } catch (e) {
-      const exception: FirestoreError = e
-      return {
-        code: exception.code,
-        message: localizeErrorsMap(exception),
-      } as ResponseError
+      return this.exceptionHandler(e)
     }
   }
 
@@ -62,14 +60,18 @@ export default class FirebaseAdapter implements DatabaseStruct {
   ): Promise<ResponseSuccess | ResponseError> {
     try {
       await this.editDocument(collectionName, id, data)
-      return { message: id } as ResponseSuccess
+      return { message: id, snapshop: [] } as ResponseSuccess
     } catch (e) {
-      const exception: FirestoreError = e
-      return {
-        code: exception.code,
-        message: localizeErrorsMap(exception),
-      } as ResponseError
+      return this.exceptionHandler(e)
     }
+  }
+
+  private exceptionHandler(e): ResponseError {
+    const exception: FirestoreError = e
+    return {
+      code: exception.code,
+      message: localizeErrorsMap(exception),
+    } as ResponseError
   }
 
   async editDocument(collectionName: string, id: string, data: object) {
@@ -78,14 +80,27 @@ export default class FirebaseAdapter implements DatabaseStruct {
 
   protected async getAllbyCollection(
     colletionName: string
-  ): Promise<QuerySnapshot<DocumentData>> {
+  ): Promise<ResponseSuccess | ResponseError> {
     return await getDocs(query(collection(db, colletionName)))
   }
 
   protected async getDocbyId(
     colletionName: string,
-    where: QueryConstraint[]
-  ): Promise<QuerySnapshot<DocumentData>> {
-    return await getDocs(query(collection(db, colletionName), ...where))
+    id: String
+  ): Promise<ResponseSuccess | ResponseError> {
+    try {
+      const result = await getDocs(query(collection(db, colletionName), where("id", "==", id)))
+      const objArray: Array<unknown> = []
+      result.forEach((snapshot) => {
+        objArray.push(snapshot.data().values)
+      })
+      return {
+        message: id,
+        snapshop: objArray
+      } as ResponseSuccess
+    } catch (e) {
+      return this.exceptionHandler(e)
+    }
+
   }
 }
