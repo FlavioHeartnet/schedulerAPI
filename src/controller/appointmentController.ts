@@ -22,7 +22,7 @@ export default class AppointmentController extends Base {
       serviceDoneAt: new Date(),
     }
 
-    return this.store(appointment, AgendamentosController.Collection)
+    return this.store(appointment, AppointmentController.Collection)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
@@ -41,20 +41,20 @@ export default class AppointmentController extends Base {
       isDone: isDone,
     }
 
-    return this.edit(Agendamento, AgendamentosController.Collection, id)
+    return this.edit(Agendamento, AppointmentController.Collection, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public getAll(): Promise<ResponseSuccess | ResponseError> {
-    const data = this.getAllbyCollection(AgendamentosController.Collection)
+    const data = this.getAllbyCollection(AppointmentController.Collection)
     return data
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public getById(id: string): Promise<ResponseSuccess | ResponseError> {
-    return this.getDocbyId(AgendamentosController.Collection, id)
+    return this.getDocbyId(AppointmentController.Collection, id)
       .then((result) =>
         this.convertToAppointmentList(result as ResponseSuccess)
       )
