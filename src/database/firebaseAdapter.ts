@@ -7,13 +7,11 @@ import {
   FirestoreError,
   getDocs,
   query,
-  QueryConstraint,
   QuerySnapshot,
   setDoc,
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase'
-import Appointment from '../model/appointments'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
@@ -39,7 +37,8 @@ export default class FirebaseAdapter implements DatabaseStruct {
   ): Promise<ResponseSuccess | ResponseError> {
     try {
       return {
-        message: (await this.insertDocument(collectionName, data)).id, snapshop: []
+        message: (await this.insertDocument(collectionName, data)).id,
+        snapshop: [],
       } as ResponseSuccess
     } catch (e) {
       return this.exceptionHandler(e)
@@ -81,7 +80,16 @@ export default class FirebaseAdapter implements DatabaseStruct {
   protected async getAllbyCollection(
     colletionName: string
   ): Promise<ResponseSuccess | ResponseError> {
-    return await getDocs(query(collection(db, colletionName)))
+    try {
+      return {
+        message: 'ok',
+        snapshop: this.mountObjArray(
+          await getDocs(query(collection(db, colletionName)))
+        ),
+      } as ResponseSuccess
+    } catch (e) {
+      return this.exceptionHandler(e)
+    }
   }
 
   protected async getDocbyId(
@@ -89,18 +97,24 @@ export default class FirebaseAdapter implements DatabaseStruct {
     id: String
   ): Promise<ResponseSuccess | ResponseError> {
     try {
-      const result = await getDocs(query(collection(db, colletionName), where("id", "==", id)))
-      const objArray: Array<unknown> = []
-      result.forEach((snapshot) => {
-        objArray.push(snapshot.data().values)
-      })
       return {
         message: id,
-        snapshop: objArray
+        snapshop: this.mountObjArray(
+          await getDocs(
+            query(collection(db, colletionName), where('id', '==', id))
+          )
+        ),
       } as ResponseSuccess
     } catch (e) {
       return this.exceptionHandler(e)
     }
+  }
 
+  private mountObjArray(result: QuerySnapshot<DocumentData>) {
+    const objArray: Array<unknown> = []
+    result.forEach((snapshot) => {
+      objArray.push(snapshot.data().values)
+    })
+    return objArray
   }
 }
