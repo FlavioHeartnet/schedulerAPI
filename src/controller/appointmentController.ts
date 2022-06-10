@@ -1,12 +1,9 @@
-
 import Appointment from '../model/appointments'
 import ResponseSuccess from '../model/responseSuccess'
 import ResponseError from '../model/responseError'
 import AppointmentAdapter from '../database/appointmentAdapter'
 
 export default class AppointmentController extends AppointmentAdapter {
-
-
   constructor() {
     super()
   }

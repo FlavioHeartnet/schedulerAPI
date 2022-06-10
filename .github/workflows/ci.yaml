@@ -18,3 +18,5 @@ jobs:
       - run: npm run lint
       - run: npm test:cov
       - run: npm run build
+      - run: docker build -t schedulerapi:latest .
+
