@@ -2,10 +2,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import CustomerController from './controller/customerController'
-import AgendamentosController from './controller/appointmentController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import AppointmentController from './controller/appointmentController'
+import Customer from './model/customer'
 
 const currentUser = {
   username: '',
@@ -112,18 +113,23 @@ app
   .route('/Cliente')
   .post(verify, (req, res) => {
     try {
-      const client = new CustomerController()
-      const nome = req.body.nome
-      const cpf = req.body.cpf
-      const DataNascimento = req.body.DataNascimento
-      client
-        .insert(nome, cpf, DataNascimento)
+      const clientController = new CustomerController()
+      const name = req.body.name
+      const registrationId = req.body.registrationId
+      const birthdate = req.body.birthdate
+      const client: Customer = {
+        name: name,
+        registrationId: registrationId,
+        birthdate: birthdate,
+      }
+      clientController
+        .insert(client)
         .then((a) => {
           res.json({
             id: a.message,
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento,
+            name: name,
+            registrationId: registrationId,
+            birthdate: birthdate,
           })
         })
         .catch((error) => {
@@ -140,19 +146,24 @@ app
     }
   })
   .get(verify, (req, res) => {
-    const client = new CustomerController()
+    const clientController = new CustomerController()
     try {
       const id = req.body.id
-      const nome = req.body.nome
-      const cpf = req.body.cpf
-      const DataNascimento = req.body.DataNascimento
-      client
-        .update(id, nome, cpf, DataNascimento)
-        .then((a) => {
+      const name = req.body.name
+      const registrationId = req.body.registrationId
+      const birthdate = req.body.birthdate
+      const customer: Customer = {
+        name: name,
+        registrationId: registrationId,
+        birthdate: birthdate,
+      }
+      clientController
+        .update(customer, id)
+        .then(() => {
           res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento,
+            name: name,
+            registrationId: registrationId,
+            birthdate: birthdate,
           })
         })
         .catch((error) => {
@@ -183,17 +194,14 @@ app.get('/clientesbyid/:id', verify, (req, res) => {
 // Agendamentos
 app.post('/agendamentos/insert', verify, (req, res) => {
   try {
-    const agendamento = new AgendamentosController()
-    const data = req.body.Data
-    const servRealizado = false
-    const observacao = req.body.Observacao
-    agendamento
-      .insert(data, observacao, servRealizado)
+    const appointment = new AppointmentController()
+    const data = req.body.data
+    appointment
+      .insert(data)
       .then((a) => {
         res.json({
           id: a.message,
-          Data: data,
-          Observacao: observacao,
+          data: data,
         })
       })
       .catch((error) => {
@@ -209,18 +217,19 @@ app.post('/agendamentos/insert', verify, (req, res) => {
 
 app.post('/agendamentos/update', verify, (req, res) => {
   try {
-    const agendamento = new AgendamentosController()
+    const appointment = new AppointmentController()
     const id = req.body.id
     const data = req.body.Data
-    const servRealizado = req.body.Serv_realizado
-    const Observacao = req.body.Observacao
-    agendamento
-      .update(id, data, new Date(), Observacao, servRealizado)
+    const serviceDoneAt = req.body.serviceDoneAt
+    const notes = req.body.notes
+    appointment
+      .update(id, data)
       .then((a) => {
         res.json({
           id: a?.message,
-          Data: data,
-          Observacao: Observacao,
+          data: data,
+          serviceDoneAt: serviceDoneAt,
+          notes: notes,
         })
       })
       .catch((error) => {
