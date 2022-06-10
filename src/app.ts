@@ -1,11 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import ClientController from './controller/customerController'
-import AgendamentosController from './controller/appointmentController'
+import CustomerController from './controller/customerController'
 import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from './firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import AppointmentController from './controller/appointmentController'
+import Customer from './model/customer'
 
 const currentUser = {
   username: '',
@@ -112,31 +113,32 @@ app
   .route('/Cliente')
   .post(verify, (req, res) => {
     try {
-      const client = new ClientController()
-      const nome = req.body.nome
-      const cpf = req.body.cpf
-      const DataNascimento = req.body.DataNascimento
-      client
-        .insert(nome, cpf, DataNascimento)
+      const clientController = new CustomerController()
+      const name = req.body.name
+      const registrationId = req.body.registrationId
+      const birthdate = req.body.birthdate
+      const client: Customer = {
+        name: name,
+        registrationId: registrationId,
+        birthdate: birthdate,
+      }
+      clientController
+        .insert(client)
         .then((a) => {
-          if (a.id != '') {
-            res.json({
-              id: a.id,
-              Nome: nome,
-              cpf: cpf,
-              DataNascimento: DataNascimento,
-            })
-          } else {
-            res.sendStatus(500).json({
-              error: a.error,
-            })
-          }
+          res.json({
+            id: a.message,
+            name: name,
+            registrationId: registrationId,
+            birthdate: birthdate,
+          })
         })
-        .catch((e) => {
-          console.log(e)
+        .catch((error) => {
+          res.sendStatus(500).json({
+            Status: -1,
+            Error: error.message,
+          })
         })
     } catch (e) {
-      console.log(e)
       res.json({
         Error:
           'Dados inseridos incorretamente verifique o formato da request desta API: /Cliente - POST: inserir',
@@ -144,40 +146,46 @@ app
     }
   })
   .get(verify, (req, res) => {
-    const client = new ClientController()
+    const clientController = new CustomerController()
     try {
       const id = req.body.id
-      const nome = req.body.nome
-      const cpf = req.body.cpf
-      const DataNascimento = req.body.DataNascimento
-      client.update(id, nome, cpf, DataNascimento).then((a) => {
-        if (a.id != '') {
+      const name = req.body.name
+      const registrationId = req.body.registrationId
+      const birthdate = req.body.birthdate
+      const customer: Customer = {
+        name: name,
+        registrationId: registrationId,
+        birthdate: birthdate,
+      }
+      clientController
+        .update(customer, id)
+        .then(() => {
           res.json({
-            Nome: nome,
-            cpf: cpf,
-            DataNascimento: DataNascimento,
+            name: name,
+            registrationId: registrationId,
+            birthdate: birthdate,
           })
-        } else {
-          res.json({
+        })
+        .catch((error) => {
+          res.sendStatus(500).json({
             Status: -1,
-            Error: a.error,
+            Error: error.message,
           })
-        }
-      })
+        })
     } catch (e) {
       res.send('Dados inválidos ou não informado corretamente!')
     }
   })
 
 app.get('/Clientes', verify, (_req, res) => {
-  const client = new ClientController()
+  const client = new CustomerController()
   client.getAll().then((a) => {
     res.json(a)
   })
 })
 
 app.get('/clientesbyid/:id', verify, (req, res) => {
-  const client = new ClientController()
+  const client = new CustomerController()
   client.getById(req.params.id).then((a) => {
     res.json(a)
   })
@@ -186,24 +194,22 @@ app.get('/clientesbyid/:id', verify, (req, res) => {
 // Agendamentos
 app.post('/agendamentos/insert', verify, (req, res) => {
   try {
-    const agendamento = new AgendamentosController()
-    const data = req.body.Data
-    const servRealizado = false
-    const observacao = req.body.Observacao
-    agendamento.insert(data, observacao, servRealizado).then((a) => {
-      if (a.message != '') {
+    const appointment = new AppointmentController()
+    const data = req.body.data
+    appointment
+      .insert(data)
+      .then((a) => {
         res.json({
-          id: a.code,
-          Data: data,
-          Observacao: observacao,
+          id: a.message,
+          data: data,
         })
-      } else {
-        res.json({
+      })
+      .catch((error) => {
+        res.sendStatus(500).json({
           Status: -1,
-          Error: a.message,
+          Error: error.message,
         })
-      }
-    })
+      })
   } catch (e) {
     res.send('Dados inválidos ou não informado corretamente!')
   }
@@ -211,26 +217,26 @@ app.post('/agendamentos/insert', verify, (req, res) => {
 
 app.post('/agendamentos/update', verify, (req, res) => {
   try {
-    const agendamento = new AgendamentosController()
+    const appointment = new AppointmentController()
     const id = req.body.id
     const data = req.body.Data
-    const servRealizado = req.body.Serv_realizado
-    const Observacao = req.body.Observacao
-    agendamento
-      .update(id, data, new Date(), Observacao, servRealizado)
+    const serviceDoneAt = req.body.serviceDoneAt
+    const notes = req.body.notes
+    appointment
+      .update(id, data)
       .then((a) => {
-        if (a?.message != '') {
-          res.json({
-            id: a?.message,
-            Data: data,
-            Observacao: Observacao,
-          })
-        } else {
-          res.json({
-            Status: -1,
-            Error: a?.message,
-          })
-        }
+        res.json({
+          id: a?.message,
+          data: data,
+          serviceDoneAt: serviceDoneAt,
+          notes: notes,
+        })
+      })
+      .catch((error) => {
+        res.sendStatus(500).json({
+          Status: -1,
+          Error: error.message,
+        })
       })
   } catch (e) {
     res.send('Dados inválidos ou não informado corretamente!')

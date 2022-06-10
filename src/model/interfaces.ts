@@ -1,4 +1,5 @@
 export interface ICustomer {
+  id?: String
   name: String
   registrationId: String
   birthdate: Date
@@ -10,6 +11,7 @@ export interface IResponseError {
 
 export interface IResponseSuccess {
   message: String
+  snapshop: unknown[]
 }
 
 export interface IAppointment {
