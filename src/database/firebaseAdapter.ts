@@ -4,6 +4,7 @@ import {
   doc,
   DocumentData,
   DocumentReference,
+  Firestore,
   FirestoreError,
   getDocs,
   query,
@@ -31,6 +32,7 @@ interface DatabaseStruct {
 }
 
 export default class FirebaseAdapter implements DatabaseStruct {
+  protected db: Firestore = db
   async store(
     data,
     collectionName: string

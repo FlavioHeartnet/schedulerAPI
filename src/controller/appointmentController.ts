@@ -1,16 +1,17 @@
-import Base from '../database/firebaseAdapter'
+
 import Appointment from '../model/appointments'
 import ResponseSuccess from '../model/responseSuccess'
 import ResponseError from '../model/responseError'
+import AppointmentAdapter from '../database/appointmentAdapter'
 
-export default class AppointmentController extends Base {
-  public static Collection: string = 'Appointment'
+export default class AppointmentController extends AppointmentAdapter {
+
 
   constructor() {
     super()
   }
 
-  public insert(
+  public newAppointment(
     date: Date,
     notes: String,
     isDone: boolean
@@ -22,39 +23,39 @@ export default class AppointmentController extends Base {
       serviceDoneAt: new Date(),
     }
 
-    return this.store(appointment, AppointmentController.Collection)
+    return this.insert(appointment)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
-  public update(
+  public updateAppointment(
     id: string,
     date: Date,
     serviceDoneAt: Date,
     notes: String,
     isDone: boolean
   ): Promise<ResponseSuccess | ResponseError> {
-    const Agendamento: Appointment = {
+    const appointment: Appointment = {
       date: date,
       serviceDoneAt: serviceDoneAt,
       notes: notes,
       isDone: isDone,
     }
 
-    return this.edit(Agendamento, AppointmentController.Collection, id)
+    return this.update(appointment, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public getAll(): Promise<ResponseSuccess | ResponseError> {
-    const data = this.getAllbyCollection(AppointmentController.Collection)
+    const data = this.getAllAppointments()
     return data
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public getById(id: string): Promise<ResponseSuccess | ResponseError> {
-    return this.getDocbyId(AppointmentController.Collection, id)
+    return this.getAppointmentById(id)
       .then((result) =>
         this.convertToAppointmentList(result as ResponseSuccess)
       )

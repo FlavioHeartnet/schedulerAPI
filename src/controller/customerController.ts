@@ -1,16 +1,14 @@
-import Base from '../database/firebaseAdapter'
+import CustomerAdapter from '../database/customerAdapter'
 import Customer from '../model/customer'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
 
-export default class ClienteController extends Base {
-  public static Collection: string = 'Cliente'
-
+export default class CustomerController extends CustomerAdapter {
   constructor() {
     super()
   }
 
-  public insert(
+  public newCustomer(
     name: String,
     registrationId: String,
     birthdate: Date
@@ -21,12 +19,12 @@ export default class ClienteController extends Base {
       birthdate: birthdate,
     }
 
-    return this.store(customer, ClienteController.Collection)
+    return this.insert(customer)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
-  public update(
+  public updateCustomer(
     id: string,
     name: String,
     registrationId: String,
@@ -38,24 +36,24 @@ export default class ClienteController extends Base {
       birthdate: birthdate,
     }
 
-    return this.edit(customer, ClienteController.Collection, id)
+    return this.update(customer, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public async getById(id: string): Promise<ResponseSuccess | ResponseError> {
-    return this.getDocbyId(ClienteController.Collection, id)
+    return this.getCustomerById(id)
       .then((result) => this.convertToCustomer(result as ResponseSuccess))
       .catch((error) => error as ResponseError)
   }
 
   public async getAll(): Promise<ResponseSuccess | ResponseError> {
-    const data = this.getAllbyCollection(ClienteController.Collection)
+    const data = this.getAllCustomers()
     return data
       .then((result) => this.convertToCustomer(result as ResponseSuccess))
       .catch((error) => error as ResponseError)
   }
-  convertToCustomer(result: ResponseSuccess): any {
+  convertToCustomer(result: ResponseSuccess): ResponseSuccess {
     result = result as ResponseSuccess
     result.snapshop = result.snapshop as Customer[]
     return result
