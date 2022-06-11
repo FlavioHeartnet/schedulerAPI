@@ -1,15 +1,15 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-
+import config from './config'
 const firebaseConfig = {
-  apiKey: 'AIzaSyB9RIEWIRg3iBnL73P_tKfb7WeHvXh1R7Q',
-  authDomain: 'agendasalaoapi.firebaseapp.com',
-  databaseURL: 'https://agendasalaoapi.firebaseio.com',
-  projectId: 'agendasalaoapi',
-  storageBucket: 'agendasalaoapi.appspot.com',
-  messagingSenderId: '801200537319',
-  appId: '1:801200537319:web:cd949258768e00fa51ec42',
+  apiKey: config.apiKey,
+  authDomain: config.authDomain,
+  databaseURL: config.databaseURL,
+  projectId: config.projectId,
+  storageBucket: config.storageBucket,
+  messagingSenderId: config.messagingSenderId,
+  appId: config.appId,
 }
 
 const firebaseApp = initializeApp(firebaseConfig)
