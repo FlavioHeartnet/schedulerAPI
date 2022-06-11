@@ -1,3 +1,4 @@
+import { collection, getDocs, where, query } from 'firebase/firestore'
 import Appointment from '../model/appointments'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
@@ -11,14 +12,41 @@ export default class AppointmentAdapter extends firebaseAdapter {
 
   async insert(data: Appointment): Promise<ResponseSuccess | ResponseError> {
     try {
+      if (await this.validateAppointment(data)) {
+        return {
+          message: (await this.store(data, AppointmentAdapter.COLLECTION))
+            .message,
+          snapshop: [],
+        } as ResponseSuccess
+      }
       return {
-        message: (await this.store(data, AppointmentAdapter.COLLECTION))
-          .message,
-        snapshop: [],
-      } as ResponseSuccess
+        message: 'Appointment already exists',
+        code: 'already_exists',
+      } as ResponseError
     } catch (e) {
       return e as ResponseError
     }
+  }
+
+  protected async validateAppointment(data: Appointment): Promise<boolean> {
+    return await this.getAppointmentByDate(data.date)
+  }
+
+  getAppointmentByDate(date: Date): Promise<boolean> {
+    return new Promise((resolve) => {
+      getDocs(
+        query(
+          collection(this.db, AppointmentAdapter.COLLECTION),
+          where('date', '==', date)
+        )
+      ).then((snapshot) => {
+        if (snapshot.empty) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      })
+    })
   }
 
   async update(
@@ -27,7 +55,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
   ): Promise<ResponseSuccess | ResponseError> {
     try {
       await this.edit(data, AppointmentAdapter.COLLECTION, id)
-      return { message: id, snapshop: [] } as ResponseSuccess
+      return { message: id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
       return e as ResponseError
     }

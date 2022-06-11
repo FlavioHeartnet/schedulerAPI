@@ -20,7 +20,7 @@ export default class CustomerAdapter extends firebaseAdapter {
         } as ResponseSuccess
       } else {
         return {
-          code: 'registration_already_exists',
+          code: 'already_exists',
           message: 'Registration already exists',
         } as ResponseError
       }
@@ -34,15 +34,8 @@ export default class CustomerAdapter extends firebaseAdapter {
     id: string
   ): Promise<ResponseSuccess | ResponseError> {
     try {
-      if (await this.isRegistrationValid(data.registrationId)) {
-        await this.edit(data, CustomerAdapter.COLLECTION, id)
-        return { message: id, snapshop: [] } as ResponseSuccess
-      } else {
-        return {
-          code: 'registration_already_exists',
-          message: 'Registration already exists',
-        } as ResponseError
-      }
+      await this.edit(data, CustomerAdapter.COLLECTION, id)
+      return { message: id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
       return e as ResponseError
     }
