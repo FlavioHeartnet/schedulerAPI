@@ -1,0 +1,29 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: agendasalaoapi-deployment
+  labels:
+    app: agendasalaoapi-app
+spec:
+  selector:
+    matchLabels:
+      app: agendasalaoapi-app
+  replicas: 3
+  template:
+    metadata: 
+      labels:
+        app: "agendasalaoapi-app"
+    spec:
+      containers:
+        - name: agendasalaoapi-app
+          image: "flavioheartnet/scheduler"
+          envFrom:
+            - configMapRef:
+                name: scheduler-env
+          # env:
+          #   - name: ACCESS_TOKEN_SECRET
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         name: scheduler-env 
+          #         key: ACCESS_TOKEN_SECRET
+         
