@@ -22,6 +22,9 @@ const port = 3000
 const token: Secret = process.env.ACCESS_TOKEN_SECRET as Secret
 
 app.use(bodyParser.json())
+app.get('/healthz', (_req, res) => {
+  res.send('OK')
+})
 app.use(cookieParser())
 const verify = async (req, res, next) => {
   try {

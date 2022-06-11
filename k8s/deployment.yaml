@@ -16,14 +16,16 @@ spec:
     spec:
       containers:
         - name: agendasalaoapi-app
-          image: "flavioheartnet/scheduler"
+          image: "flavioheartnet/scheduler:v2"
           envFrom:
             - configMapRef:
                 name: scheduler-env
-          # env:
-          #   - name: ACCESS_TOKEN_SECRET
-          #     valueFrom:
-          #       configMapKeyRef:
-          #         name: scheduler-env 
-          #         key: ACCESS_TOKEN_SECRET
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 1
+            successThreshold: 1       
          
