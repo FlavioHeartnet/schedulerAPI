@@ -43,19 +43,14 @@ export default class CustomerController extends CustomerAdapter {
 
   public async getById(id: string): Promise<ResponseSuccess | ResponseError> {
     return this.getCustomerById(id)
-      .then((result) => this.convertToCustomer(result as ResponseSuccess))
+      .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
 
   public async getAll(): Promise<ResponseSuccess | ResponseError> {
     const data = this.getAllCustomers()
     return data
-      .then((result) => this.convertToCustomer(result as ResponseSuccess))
+      .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
-  }
-  convertToCustomer(result: ResponseSuccess): ResponseSuccess {
-    result = result as ResponseSuccess
-    result.snapshop = result.snapshop as Customer[]
-    return result
   }
 }
