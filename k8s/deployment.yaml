@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: agendasalaoapi-app
-  replicas: 3
+  replicas: 2
   template:
     metadata: 
       labels:
@@ -17,9 +17,22 @@ spec:
       containers:
         - name: agendasalaoapi-app
           image: "flavioheartnet/scheduler:v2"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 20Mi
+            limits:
+              cpu: 500m
+              memory: 25Mi  
           envFrom:
             - configMapRef:
                 name: scheduler-env
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            periodSeconds: 3
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /healthz
@@ -27,5 +40,10 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
             timeoutSeconds: 1
-            successThreshold: 1       
-         
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            periodSeconds: 3
+            failureThreshold: 1
