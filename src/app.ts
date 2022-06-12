@@ -7,6 +7,7 @@ import { auth } from './firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import AppointmentController from './controller/appointmentController'
 import Customer from './model/customer'
+import config from './config'
 
 const currentUser = {
   username: '',
@@ -19,7 +20,7 @@ const currentUser = {
 
 const app = express()
 const port = 3000
-const token: Secret = process.env.ACCESS_TOKEN_SECRET as Secret
+const token: Secret = config.accessTokenSecret as Secret
 
 app.use(bodyParser.json())
 app.get('/healthz', (_req, res) => {
@@ -52,28 +53,21 @@ app.post('/login', async (req, res) => {
       .then(() => {
         currentUser.username = req.body.email
       })
-      .catch((error: { code; message }) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-
+      .catch((error: { code; message }) =>
         res.json({
-          Error: errorMessage,
-          ErrorCode: errorCode,
+          Error: error.message,
+          ErrorCode: error.code,
         })
-      })
-
-    let accessToken = ''
-    accessToken = jwt.sign(currentUser, token, {
-      algorithm: 'HS256',
-      expiresIn: process.env.ACCESS_TOKEN_LIFE,
-    })
-
+      )
     res.json({
-      token: accessToken,
-      User: currentUser,
+      token: jwt.sign(currentUser, token, {
+        algorithm: 'HS256',
+        expiresIn: config.accessTokenLife,
+      }),
+      user: currentUser,
     })
   } catch (e) {
-    res.json({
+    res.status(500).send({
       Error:
         'Dados inseridos incorretamente verifique o formato da request desta API: /login',
     })
