@@ -1,4 +1,3 @@
-import { collection, getDocs, query, where } from 'firebase/firestore'
 import Customer from '../model/customer'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
@@ -25,7 +24,7 @@ export default class CustomerAdapter extends firebaseAdapter {
         } as ResponseError
       }
     } catch (e) {
-      return e as ResponseError
+      throw e
     }
   }
 
@@ -37,37 +36,41 @@ export default class CustomerAdapter extends firebaseAdapter {
       await this.edit(data, CustomerAdapter.COLLECTION, id)
       return { message: id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
-      return e as ResponseError
+      throw e
     }
   }
 
   async getCustomerById(id: string): Promise<ResponseSuccess | ResponseError> {
     return this.getDocbyId(CustomerAdapter.COLLECTION, id)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => {
+        throw error
+      })
   }
 
   async getAllCustomers(): Promise<ResponseSuccess | ResponseError> {
     const data = this.getAllbyCollection(CustomerAdapter.COLLECTION)
     return data
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => {
+        throw error
+      })
   }
 
-  isRegistrationValid(registration: String): Promise<boolean> {
-    return new Promise((resolve) => {
-      getDocs(
-        query(
-          collection(this.db, CustomerAdapter.COLLECTION),
-          where('registrationId', '==', registration)
-        )
-      ).then((snapshot) => {
-        if (snapshot.empty) {
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
-    })
+  async isRegistrationValid(registration: String): Promise<boolean> {
+    try {
+      const result = await this.getDocsbyWhere(
+        CustomerAdapter.COLLECTION,
+        registration,
+        'registrationId'
+      )
+      if (result.empty) {
+        return false
+      } else {
+        return true
+      }
+    } catch (e) {
+      throw this.exceptionHandler(e)
+    }
   }
 }

@@ -43,7 +43,7 @@ export default class FirebaseAdapter implements DatabaseStruct {
         snapshop: [],
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -63,11 +63,11 @@ export default class FirebaseAdapter implements DatabaseStruct {
       await this.editDocument(collectionName, id, data)
       return { message: id, snapshop: [] } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
-  private exceptionHandler(e): ResponseError {
+  protected exceptionHandler(e): ResponseError {
     const exception: FirestoreError = e
     return {
       code: exception.code,
@@ -90,7 +90,7 @@ export default class FirebaseAdapter implements DatabaseStruct {
         ),
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -108,7 +108,7 @@ export default class FirebaseAdapter implements DatabaseStruct {
         ),
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -118,5 +118,18 @@ export default class FirebaseAdapter implements DatabaseStruct {
       objArray.push(snapshot.data().values)
     })
     return objArray
+  }
+
+  protected getDocsbyWhere(
+    collectionName: string,
+    property: unknown,
+    collectionProperty: string
+  ) {
+    return getDocs(
+      query(
+        collection(db, collectionName),
+        where(collectionProperty, '==', property)
+      )
+    )
   }
 }

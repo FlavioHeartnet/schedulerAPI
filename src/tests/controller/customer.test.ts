@@ -28,45 +28,27 @@ describe('Handle the creation of a new appointment', () => {
     jest
       .spyOn(controller, 'insert')
       .mockImplementation(() => Promise.resolve(mockedSucessResponse))
-    controller
-      .newCustomer(
-        mockedCustomer.name,
-        mockedCustomer.registrationId,
-        mockedCustomer.birthdate
-      )
-      .then((result) => {
-        expect(result as ResponseSuccess).toEqual(mockedSucessResponse)
-      })
+    controller.newCustomer(mockedCustomer).then((result) => {
+      expect(result as ResponseSuccess).toEqual(mockedSucessResponse)
+    })
   })
 
   it('should create a new appointment and return FirebaseError', () => {
     jest
       .spyOn(controller, 'insert')
       .mockImplementation(() => Promise.reject(mockedErrorResponseBR))
-    controller
-      .newCustomer(
-        mockedCustomer.name,
-        mockedCustomer.registrationId,
-        mockedCustomer.birthdate
-      )
-      .catch((error) => {
-        expect(error as ResponseError).toEqual(mockedErrorResponseBR)
-      })
+    controller.newCustomer(mockedCustomer).catch((error) => {
+      expect(error as ResponseError).toEqual(mockedErrorResponseBR)
+    })
   })
 
   it('should try to create a new appointment and return appointment already exists', () => {
     jest
       .spyOn(controller, 'isRegistrationValid')
       .mockImplementation(() => Promise.resolve(false))
-    controller
-      .newCustomer(
-        mockedCustomer.name,
-        mockedCustomer.registrationId,
-        mockedCustomer.birthdate
-      )
-      .catch((error) => {
-        expect(error as ResponseError).toEqual(mockedAlreadyExists)
-      })
+    controller.newCustomer(mockedCustomer).catch((error) => {
+      expect(error as ResponseError).toEqual(mockedAlreadyExists)
+    })
   })
 })
 

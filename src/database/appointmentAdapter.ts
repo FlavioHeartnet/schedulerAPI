@@ -1,4 +1,3 @@
-import { collection, getDocs, where, query } from 'firebase/firestore'
 import Appointment from '../model/appointments'
 import ResponseError from '../model/responseError'
 import ResponseSuccess from '../model/responseSuccess'
@@ -24,7 +23,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
         code: 'already_exists',
       } as ResponseError
     } catch (e) {
-      return e as ResponseError
+      throw e
     }
   }
 
@@ -32,21 +31,20 @@ export default class AppointmentAdapter extends firebaseAdapter {
     return await this.getAppointmentByDate(data.date)
   }
 
-  getAppointmentByDate(date: Date): Promise<boolean> {
-    return new Promise((resolve) => {
-      getDocs(
-        query(
-          collection(this.db, AppointmentAdapter.COLLECTION),
-          where('date', '==', date)
-        )
-      ).then((snapshot) => {
-        if (snapshot.empty) {
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
-    })
+  async getAppointmentByDate(date: Date): Promise<boolean> {
+    try {
+      const data = await this.getDocsbyWhere(
+        AppointmentAdapter.COLLECTION,
+        date,
+        'date'
+      )
+      if (data.empty) {
+        return false
+      }
+      return true
+    } catch (e) {
+      throw e
+    }
   }
 
   async update(
@@ -57,7 +55,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
       await this.edit(data, AppointmentAdapter.COLLECTION, id)
       return { message: id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
-      return e as ResponseError
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -66,13 +64,17 @@ export default class AppointmentAdapter extends firebaseAdapter {
   ): Promise<ResponseSuccess | ResponseError> {
     return this.getDocbyId(AppointmentAdapter.COLLECTION, id)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => {
+        throw error
+      })
   }
 
   async getAllAppointments(): Promise<ResponseSuccess | ResponseError> {
     const data = this.getAllbyCollection(AppointmentAdapter.COLLECTION)
     return data
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => {
+        throw error
+      })
   }
 }

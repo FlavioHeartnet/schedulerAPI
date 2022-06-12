@@ -126,7 +126,7 @@ app
         birthdate: birthdate,
       }
       clientController
-        .insert(client)
+        .newCustomer(client)
         .then((a) => {
           res.json({
             id: a.message,
@@ -136,7 +136,7 @@ app
           })
         })
         .catch((error) => {
-          res.sendStatus(500).json({
+          res.status(500).send({
             Status: -1,
             Error: error.message,
           })

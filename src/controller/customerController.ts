@@ -9,19 +9,13 @@ export default class CustomerController extends CustomerAdapter {
   }
 
   public newCustomer(
-    name: String,
-    registrationId: String,
-    birthdate: Date
+    newCustomer: Customer
   ): Promise<ResponseSuccess | ResponseError> {
-    const customer: Customer = {
-      name: name,
-      registrationId: registrationId,
-      birthdate: birthdate,
-    }
-
-    return this.insert(customer)
+    return this.insert(newCustomer)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => {
+        throw error
+      })
   }
 
   public updateCustomer(
