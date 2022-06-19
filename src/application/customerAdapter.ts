@@ -1,7 +1,7 @@
-import Customer from '../model/customer'
-import ResponseError from '../model/responseError'
-import ResponseSuccess from '../model/responseSuccess'
-import firebaseAdapter from './firebaseAdapter'
+import Customer from '../domain/customer'
+import ResponseError from '../domain/responseError'
+import ResponseSuccess from '../domain/responseSuccess'
+import firebaseAdapter from '../Infra/firebaseDb'
 
 export default class CustomerAdapter extends firebaseAdapter {
   constructor() {
@@ -65,9 +65,9 @@ export default class CustomerAdapter extends firebaseAdapter {
         'registrationId'
       )
       if (result.empty) {
-        return false
-      } else {
         return true
+      } else {
+        return false
       }
     } catch (e) {
       throw this.exceptionHandler(e)

@@ -3,11 +3,11 @@ import {
   DocumentReference,
   FirestoreError,
 } from 'firebase/firestore'
-import FirebaseAdapter from '../../database/firebaseAdapter'
-import { localizeErrorsMap } from '../../database/firestoreException'
+import FirebaseAdapter from '../../Infra/firebaseDb'
+import { localizeErrorsMap } from '../../Infra/firestoreException'
 import { db } from '../../firebase'
-import ResponseError from '../../model/responseError'
-import ResponseSuccess from '../../model/responseSuccess'
+import ResponseError from '../../domain/responseError'
+import ResponseSuccess from '../../domain/responseSuccess'
 
 const adapter: FirebaseAdapter = new FirebaseAdapter()
 const testObject = {

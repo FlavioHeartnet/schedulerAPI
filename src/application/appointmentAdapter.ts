@@ -1,7 +1,7 @@
-import Appointment from '../model/appointments'
-import ResponseError from '../model/responseError'
-import ResponseSuccess from '../model/responseSuccess'
-import firebaseAdapter from './firebaseAdapter'
+import Appointment from '../domain/appointments'
+import ResponseError from '../domain/responseError'
+import ResponseSuccess from '../domain/responseSuccess'
+import firebaseAdapter from '../Infra/firebaseDb'
 
 export default class AppointmentAdapter extends firebaseAdapter {
   public static COLLECTION: string = 'Appointment'

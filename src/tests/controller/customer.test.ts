@@ -1,7 +1,7 @@
 import CustomerController from '../../controller/customerController'
-import Customer from '../../model/customer'
-import ResponseError from '../../model/responseError'
-import ResponseSuccess from '../../model/responseSuccess'
+import Customer from '../../domain/customer'
+import ResponseError from '../../domain/responseError'
+import ResponseSuccess from '../../domain/responseSuccess'
 
 const controller = new CustomerController()
 const mockedCustomer: Customer = {

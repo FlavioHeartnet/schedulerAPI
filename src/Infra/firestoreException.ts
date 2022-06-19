@@ -1,6 +1,6 @@
 import { FirestoreError } from 'firebase/firestore'
 
-export function localizeErrorsMap(e: FirestoreError): String {
+export function localizeErrorsMap(e: FirestoreError): string {
   if (firestoreErrors.hasOwnProperty(e.code)) {
     return firestoreErrors[e.code]
   } else {

@@ -1,7 +1,7 @@
-import CustomerAdapter from '../database/customerAdapter'
-import Customer from '../model/customer'
-import ResponseError from '../model/responseError'
-import ResponseSuccess from '../model/responseSuccess'
+import CustomerAdapter from '../application/customerAdapter'
+import Customer from '../domain/customer'
+import ResponseError from '../domain/responseError'
+import ResponseSuccess from '../domain/responseSuccess'
 
 export default class CustomerController extends CustomerAdapter {
   constructor() {

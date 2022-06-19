@@ -1,7 +1,7 @@
-import Appointment from '../model/appointments'
-import ResponseSuccess from '../model/responseSuccess'
-import ResponseError from '../model/responseError'
-import AppointmentAdapter from '../database/appointmentAdapter'
+import Appointment from '../domain/appointments'
+import ResponseSuccess from '../domain/responseSuccess'
+import ResponseError from '../domain/responseError'
+import AppointmentAdapter from '../application/appointmentAdapter'
 
 export default class AppointmentController extends AppointmentAdapter {
   constructor() {
