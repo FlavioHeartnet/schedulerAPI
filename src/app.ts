@@ -113,7 +113,7 @@ app
       const name = req.body.name
       const registrationId = req.body.registrationId
       const birthdate = req.body.birthdate
-      const client: Customer = {
+      const client = {
         name: name,
         registrationId: registrationId,
         birthdate: birthdate,
@@ -148,7 +148,7 @@ app
       const name = req.body.name
       const registrationId = req.body.registrationId
       const birthdate = req.body.birthdate
-      const customer: Customer = {
+      const customer = {
         name: name,
         registrationId: registrationId,
         birthdate: birthdate,
