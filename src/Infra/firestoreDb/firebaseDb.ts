@@ -12,9 +12,9 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore'
-import { db } from '../firebase'
-import ResponseError from '../domain/responseError'
-import ResponseSuccess from '../domain/responseSuccess'
+import { db } from './firebase'
+import ResponseError from '../../controller/responseError'
+import ResponseSuccess from '../../controller/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
 
 interface DatabaseStruct {

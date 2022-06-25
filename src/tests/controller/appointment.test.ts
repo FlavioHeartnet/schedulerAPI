@@ -1,7 +1,7 @@
 import AppointmentController from '../../controller/appointmentController'
 import Appointment from '../../domain/appointments'
-import ResponseError from '../../domain/responseError'
-import ResponseSuccess from '../../domain/responseSuccess'
+import ResponseError from '../../controller/responseError'
+import ResponseSuccess from '../../controller/responseSuccess'
 
 const controller: AppointmentController = new AppointmentController()
 const mockedAppointment: Appointment = {

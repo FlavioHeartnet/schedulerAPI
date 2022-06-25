@@ -1,4 +1,4 @@
-import { IResponseError } from './interfaces'
+import { IResponseError } from '../domain/interfaces'
 
 export default class ResponseError implements IResponseError {
   public code: string

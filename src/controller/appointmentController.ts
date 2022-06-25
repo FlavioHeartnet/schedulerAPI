@@ -1,6 +1,6 @@
-import Appointment from '../domain/appointments'
-import ResponseSuccess from '../domain/responseSuccess'
-import ResponseError from '../domain/responseError'
+
+import ResponseSuccess from './responseSuccess'
+import ResponseError from './responseError'
 import AppointmentAdapter from '../application/appointmentAdapter'
 
 export default class AppointmentController extends AppointmentAdapter {

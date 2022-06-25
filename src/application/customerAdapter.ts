@@ -1,7 +1,7 @@
 import Customer from '../domain/customer'
-import ResponseError from '../domain/responseError'
-import ResponseSuccess from '../domain/responseSuccess'
-import firebaseAdapter from '../Infra/firebaseDb'
+import ResponseError from '../controller/responseError'
+import ResponseSuccess from '../controller/responseSuccess'
+import firebaseAdapter from '../Infra/firestoreDb/firebaseDb'
 
 export default class CustomerAdapter extends firebaseAdapter {
   constructor() {

@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsnd src/app.ts",
+    "start": "tsnd src/infra/express/app.ts",
     "build": "tsc",
     "prestart": "npm run build",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev src/infra/express/app.ts",
     "prebuild": "eslint -c .eslintrc.json --fix",
     "format": "npx prettier --write src/",
     "format:analysis": "npx prettier --debug-check --list-different src/",
