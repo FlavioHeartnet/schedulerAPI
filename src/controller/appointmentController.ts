@@ -1,7 +1,9 @@
 
 import ResponseSuccess from './responseSuccess'
 import ResponseError from './responseError'
-import AppointmentAdapter from '../application/appointmentAdapter'
+import AppointmentAdapter from '../Infra/firestoreDb/appointmentAdapter'
+import { CreateAppointmentDto } from './dto/create-appointment.dto'
+import { UpdateAppointmentDTO } from './dto/update-appointment.dto'
 
 export default class AppointmentController extends AppointmentAdapter {
   constructor() {
@@ -13,11 +15,10 @@ export default class AppointmentController extends AppointmentAdapter {
     notes: String,
     isDone: boolean
   ): Promise<ResponseSuccess | ResponseError> {
-    const appointment: Appointment = {
+    const appointment: CreateAppointmentDto = {
       date: date,
       notes: notes,
       isDone: isDone,
-      serviceDoneAt: new Date(),
     }
 
     return this.insert(appointment)
@@ -28,18 +29,17 @@ export default class AppointmentController extends AppointmentAdapter {
   public updateAppointment(
     id: string,
     date: Date,
-    serviceDoneAt: Date,
     notes: String,
     isDone: boolean
   ): Promise<ResponseSuccess | ResponseError> {
-    const appointment: Appointment = {
+    const appointment: UpdateAppointmentDTO = {
+      id: id,
       date: date,
-      serviceDoneAt: serviceDoneAt,
       notes: notes,
       isDone: isDone,
     }
 
-    return this.update(appointment, id)
+    return this.update(appointment)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }

@@ -1,7 +1,6 @@
-import Appointment from '../domain/appointments'
-import ResponseError from '../controller/responseError'
-import ResponseSuccess from '../controller/responseSuccess'
-import firebaseAdapter from '../Infra/firestoreDb/firebaseDb'
+import ResponseError from '../../controller/responseError'
+import ResponseSuccess from '../../controller/responseSuccess'
+import firebaseAdapter from './firebaseDb'
 
 export default class AppointmentAdapter extends firebaseAdapter {
   public static COLLECTION: string = 'Appointment'
@@ -49,11 +48,10 @@ export default class AppointmentAdapter extends firebaseAdapter {
 
   async update(
     data: Appointment,
-    id: string
   ): Promise<ResponseSuccess | ResponseError> {
     try {
-      await this.edit(data, AppointmentAdapter.COLLECTION, id)
-      return { message: id, snapshop: [data] } as ResponseSuccess
+      await this.edit(data, AppointmentAdapter.COLLECTION, data.id)
+      return { message: data.id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
       throw this.exceptionHandler(e)
     }
