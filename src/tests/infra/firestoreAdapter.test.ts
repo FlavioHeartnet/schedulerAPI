@@ -6,8 +6,8 @@ import {
 import FirebaseAdapter from '../../infra/firestoreDb/firebaseDb'
 import { localizeErrorsMap } from '../../infra/firestoreDb/firestoreException'
 import { db } from '../../infra/firestoreDb/firebase'
-import ResponseError from '../../controller/responseError'
-import ResponseSuccess from '../../controller/responseSuccess'
+import ResponseError from '../../appointments/responseError'
+import ResponseSuccess from '../../domain/responseSuccess'
 
 const adapter: FirebaseAdapter = new FirebaseAdapter()
 const testObject = {

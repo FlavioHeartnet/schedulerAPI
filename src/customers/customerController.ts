@@ -1,7 +1,7 @@
+
 import Customer from '../domain/customer'
-import CustomerAdapter from './customerFirebaseAdapter'
-import ResponseError from './responseError'
-import ResponseSuccess from './responseSuccess'
+import CustomerAdapter from './adapters/firebaseAdapter/customerFirebaseAdapter'
+import ResponseSuccess from '../domain/responseSuccess'
 
 export default class CustomerController extends CustomerAdapter {
   constructor() {
@@ -10,7 +10,7 @@ export default class CustomerController extends CustomerAdapter {
 
   public newCustomer(
     newCustomer: Customer
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     return this.insert(newCustomer)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
@@ -23,7 +23,7 @@ export default class CustomerController extends CustomerAdapter {
     name: String,
     registrationId: String,
     birthdate: Date
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     const customer: Customer = {
       name: name,
       registrationId: registrationId,
@@ -32,19 +32,19 @@ export default class CustomerController extends CustomerAdapter {
 
     return this.update(customer, id)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
-  public async getById(id: string): Promise<ResponseSuccess | ResponseError> {
+  public async getById(id: string): Promise<ResponseSuccess> {
     return this.getCustomerById(id)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
-  public async getAll(): Promise<ResponseSuccess | ResponseError> {
+  public async getAll(): Promise<ResponseSuccess> {
     const data = this.getAllCustomers()
     return data
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 }

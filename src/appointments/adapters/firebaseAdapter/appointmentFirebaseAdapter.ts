@@ -1,7 +1,7 @@
 import FirebaseDb from '../../../infra/firestoreDb/firebaseDb'
 import { CreateAppointmentDto } from '../../dto/create-appointment.dto'
 import { UpdateAppointmentDTO } from '../../dto/update-appointment.dto'
-import ResponseSuccess from '../../responseSuccess'
+import ResponseSuccess from '../../../domain/responseSuccess'
 
 export default class AppointmentFirebaseAdapter extends FirebaseDb {
   public static COLLECTION: string = 'Appointment'

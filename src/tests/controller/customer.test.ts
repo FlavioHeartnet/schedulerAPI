@@ -1,7 +1,6 @@
-import CustomerController from '../../controller/customerController'
+import CustomerController from '../../customers/customerController'
 import Customer from '../../domain/customer'
-import ResponseError from '../../controller/responseError'
-import ResponseSuccess from '../../controller/responseSuccess'
+import ResponseSuccess from '../../domain/responseSuccess'
 
 const controller = new CustomerController()
 const mockedCustomer: Customer = {
@@ -13,14 +12,14 @@ const mockedSucessResponse: ResponseSuccess = {
   message: '1',
   snapshop: [mockedCustomer],
 }
-const mockedErrorResponseBR: ResponseError = {
+const mockedErrorResponseBR: Error = {
   message:
     'A operação foi abortada, normalmente devido a um problema de simultaneidade.',
-  code: 'aborted',
+  name: 'aborted',
 }
-const mockedAlreadyExists: ResponseError = {
+const mockedAlreadyExists: Error = {
   message: 'Customer already exists',
-  code: 'already_exists',
+  name: 'already_exists',
 }
 
 describe('Handle the creation of a new appointment', () => {
@@ -38,7 +37,7 @@ describe('Handle the creation of a new appointment', () => {
       .spyOn(controller, 'insert')
       .mockImplementation(() => Promise.reject(mockedErrorResponseBR))
     controller.newCustomer(mockedCustomer).catch((error) => {
-      expect(error as ResponseError).toEqual(mockedErrorResponseBR)
+      expect(error).toEqual(mockedErrorResponseBR)
     })
   })
 
@@ -47,7 +46,7 @@ describe('Handle the creation of a new appointment', () => {
       .spyOn(controller, 'isRegistrationValid')
       .mockImplementation(() => Promise.resolve(false))
     controller.newCustomer(mockedCustomer).catch((error) => {
-      expect(error as ResponseError).toEqual(mockedAlreadyExists)
+      expect(error).toEqual(mockedAlreadyExists)
     })
   })
 })
@@ -81,7 +80,7 @@ describe('Handle the edition of an appointment', () => {
         mockedCustomer.birthdate
       )
       .catch((error) => {
-        expect(error as ResponseError).toEqual(mockedErrorResponseBR)
+        expect(error).toEqual(mockedErrorResponseBR)
       })
   })
 })

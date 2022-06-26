@@ -1,4 +1,4 @@
-import { IResponseSuccess } from '../domain/interfaces'
+import { IResponseSuccess } from './interfaces'
 
 export default class ResponseSuccess implements IResponseSuccess {
   snapshop: unknown[]

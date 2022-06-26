@@ -13,8 +13,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from './firebase'
-import ResponseError from '../../controller/responseError'
-import ResponseSuccess from '../../controller/responseSuccess'
+import ResponseSuccess from '../../domain/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
 
 interface DatabaseStruct {
@@ -60,10 +59,10 @@ export default class FirebaseDb implements DatabaseStruct {
     }
   }
 
-  protected exceptionHandler(e): ResponseError {
+  protected exceptionHandler(e): Error {
     const exception: FirestoreError = e
     return {
-      code: exception.code,
+      name: exception.code,
       message: localizeErrorsMap(exception),
     }
   }

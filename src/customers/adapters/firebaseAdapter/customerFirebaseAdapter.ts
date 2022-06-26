@@ -1,6 +1,7 @@
-import ResponseSuccess from './responseSuccess'
-import Customer from '../domain/customer'
-import FirebaseDb from '../infra/firestoreDb/firebaseDb'
+import ResponseSuccess from "../../../domain/responseSuccess"
+import Customer from "../../../domain/customer"
+import FirebaseDb from "../../../infra/firestoreDb/firebaseDb"
+
 
 export default class CustomerAdapter extends FirebaseDb {
   constructor() {
@@ -24,7 +25,10 @@ export default class CustomerAdapter extends FirebaseDb {
     }
   }
 
-  async update(data: Customer, id: string): Promise<ResponseSuccess> {
+  async update(
+    data: Customer,
+    id: string
+  ): Promise<ResponseSuccess> {
     try {
       await this.edit(data, CustomerAdapter.COLLECTION, id)
       return { message: id, snapshop: [data] } as ResponseSuccess

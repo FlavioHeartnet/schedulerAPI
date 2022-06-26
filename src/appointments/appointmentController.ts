@@ -1,8 +1,7 @@
-import ResponseSuccess from './responseSuccess'
-import ResponseError from './responseError'
+import ResponseSuccess from '../domain/responseSuccess'
 import { CreateAppointmentDto } from './dto/create-appointment.dto'
 import { UpdateAppointmentDTO } from './dto/update-appointment.dto'
-import AppointmentAdapter from './Adapters/firebaseAdapters/appointmentFirebaseAdapter'
+import AppointmentAdapter from './adapters/firebaseAdapter/appointmentFirebaseAdapter'
 
 export default class AppointmentController {
   appointmentAdapter: AppointmentAdapter
@@ -13,7 +12,7 @@ export default class AppointmentController {
     date: Date,
     notes: String,
     isDone: boolean
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     const appointment: CreateAppointmentDto = {
       date: date,
       notes: notes,
@@ -23,7 +22,7 @@ export default class AppointmentController {
     return this.appointmentAdapter
       .insert(appointment)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
   public updateAppointment(
@@ -31,7 +30,7 @@ export default class AppointmentController {
     date: Date,
     notes: String,
     isDone: boolean
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     const appointment: UpdateAppointmentDTO = {
       id: id,
       date: date,
@@ -42,23 +41,23 @@ export default class AppointmentController {
     return this.appointmentAdapter
       .update(appointment)
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
-  public getAll(): Promise<ResponseSuccess | ResponseError> {
+  public getAll(): Promise<ResponseSuccess> {
     const data = this.appointmentAdapter.getAllAppointments()
     return data
       .then((result) => result as ResponseSuccess)
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
-  public getById(id: string): Promise<ResponseSuccess | ResponseError> {
+  public getById(id: string): Promise<ResponseSuccess> {
     return this.appointmentAdapter
       .getAppointmentById(id)
       .then((result) =>
         this.convertToAppointmentList(result as ResponseSuccess)
       )
-      .catch((error) => error as ResponseError)
+      .catch((error) => error)
   }
 
   private convertToAppointmentList(result: ResponseSuccess) {
