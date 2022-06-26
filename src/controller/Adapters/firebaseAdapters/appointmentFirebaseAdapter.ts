@@ -1,9 +1,9 @@
-import { CreateAppointmentDto } from '../../controller/dto/create-appointment.dto'
-import { UpdateAppointmentDTO } from '../../controller/dto/update-appointment.dto'
-import ResponseSuccess from '../../controller/responseSuccess'
-import firebaseAdapter from './firebaseDb'
+import FirebaseDb from '../../../infra/firestoreDb/firebaseDb'
+import { CreateAppointmentDto } from '../../dto/create-appointment.dto'
+import { UpdateAppointmentDTO } from '../../dto/update-appointment.dto'
+import ResponseSuccess from '../../responseSuccess'
 
-export default class AppointmentAdapter extends firebaseAdapter {
+export default class AppointmentFirebaseAdapter extends FirebaseDb {
   public static COLLECTION: string = 'Appointment'
   constructor() {
     super()
@@ -13,8 +13,9 @@ export default class AppointmentAdapter extends firebaseAdapter {
     try {
       if (await this.validateAppointment(data)) {
         return {
-          message: (await this.store(data, AppointmentAdapter.COLLECTION))
-            .message,
+          message: (
+            await this.store(data, AppointmentFirebaseAdapter.COLLECTION)
+          ).message,
           snapshop: [],
         } as ResponseSuccess
       }
@@ -24,14 +25,16 @@ export default class AppointmentAdapter extends firebaseAdapter {
     }
   }
 
-  protected async validateAppointment(data: CreateAppointmentDto): Promise<boolean> {
+  protected async validateAppointment(
+    data: CreateAppointmentDto
+  ): Promise<boolean> {
     return await this.getAppointmentByDate(data.date)
   }
 
   async getAppointmentByDate(date: Date): Promise<boolean> {
     try {
       const data = await this.getDocsbyWhere(
-        AppointmentAdapter.COLLECTION,
+        AppointmentFirebaseAdapter.COLLECTION,
         date,
         'date'
       )
@@ -44,21 +47,17 @@ export default class AppointmentAdapter extends firebaseAdapter {
     }
   }
 
-  async update(
-    data: UpdateAppointmentDTO,
-  ): Promise<ResponseSuccess> {
+  async update(data: UpdateAppointmentDTO): Promise<ResponseSuccess> {
     try {
-      await this.edit(data, AppointmentAdapter.COLLECTION, data.id)
+      await this.edit(data, AppointmentFirebaseAdapter.COLLECTION, data.id)
       return { message: data.id, snapshop: [data] } as ResponseSuccess
     } catch (e) {
       throw this.exceptionHandler(e)
     }
   }
 
-  async getAppointmentById(
-    id: string
-  ): Promise<ResponseSuccess> {
-    return this.getDocbyId(AppointmentAdapter.COLLECTION, id)
+  async getAppointmentById(id: string): Promise<ResponseSuccess> {
+    return this.getDocbyId(AppointmentFirebaseAdapter.COLLECTION, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
         throw error
@@ -66,7 +65,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
   }
 
   async getAllAppointments(): Promise<ResponseSuccess> {
-    const data = this.getAllbyCollection(AppointmentAdapter.COLLECTION)
+    const data = this.getAllbyCollection(AppointmentFirebaseAdapter.COLLECTION)
     return data
       .then((result) => result as ResponseSuccess)
       .catch((error) => {

@@ -191,13 +191,14 @@ app.get('/clientesbyid/:id', verify, (req, res) => {
 app.post('/agendamentos/insert', verify, (req, res) => {
   try {
     const appointment = new AppointmentController()
-    const data = req.body.data
+    const date = req.body.date
+    const notes = req.body.notes
     appointment
-      .insert(data)
+      .newAppointment(date, notes, false)
       .then((a) => {
         res.json({
           id: a.message,
-          data: data,
+          date: date,
         })
       })
       .catch((error) => {
@@ -215,16 +216,15 @@ app.post('/agendamentos/update', verify, (req, res) => {
   try {
     const appointment = new AppointmentController()
     const id = req.body.id
-    const data = req.body.Data
-    const serviceDoneAt = req.body.serviceDoneAt
+    const date = req.body.date
     const notes = req.body.notes
+    const isDone = req.body.isDone
     appointment
-      .update(id, data)
+      .updateAppointment(id, date, notes, isDone)
       .then((a) => {
         res.json({
           id: a?.message,
-          data: data,
-          serviceDoneAt: serviceDoneAt,
+          date: date,
           notes: notes,
         })
       })

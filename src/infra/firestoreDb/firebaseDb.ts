@@ -18,11 +18,7 @@ import ResponseSuccess from '../../controller/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
 
 interface DatabaseStruct {
-  store(
-    data,
-    collection: string,
-    converter
-  ): Promise<ResponseSuccess>
+  store(data, collection: string, converter): Promise<ResponseSuccess>
   edit(
     data,
     collection: string,
@@ -31,12 +27,9 @@ interface DatabaseStruct {
   ): Promise<ResponseSuccess>
 }
 
-export default class FirebaseAdapter implements DatabaseStruct {
+export default class FirebaseDb implements DatabaseStruct {
   protected db: Firestore = db
-  async store(
-    data,
-    collectionName: string
-  ): Promise<ResponseSuccess> {
+  async store(data, collectionName: string): Promise<ResponseSuccess> {
     try {
       return {
         message: (await this.insertDocument(collectionName, data)).id,

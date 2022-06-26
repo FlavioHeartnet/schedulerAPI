@@ -1,16 +1,15 @@
+import ResponseSuccess from './responseSuccess'
 import Customer from '../domain/customer'
-import ResponseError from '../controller/responseError'
-import ResponseSuccess from '../controller/responseSuccess'
-import firebaseAdapter from '../Infra/firestoreDb/firebaseDb'
+import FirebaseDb from '../infra/firestoreDb/firebaseDb'
 
-export default class CustomerAdapter extends firebaseAdapter {
+export default class CustomerAdapter extends FirebaseDb {
   constructor() {
     super()
   }
 
   public static COLLECTION: string = 'Customers'
 
-  async insert(data: Customer): Promise<ResponseSuccess | ResponseError> {
+  async insert(data: Customer): Promise<ResponseSuccess> {
     try {
       if (await this.isRegistrationValid(data.registrationId)) {
         return {
@@ -18,20 +17,14 @@ export default class CustomerAdapter extends firebaseAdapter {
           snapshop: [],
         } as ResponseSuccess
       } else {
-        return {
-          code: 'already_exists',
-          message: 'Registration already exists',
-        } as ResponseError
+        throw new Error('Registration already exists')
       }
     } catch (e) {
       throw e
     }
   }
 
-  async update(
-    data: Customer,
-    id: string
-  ): Promise<ResponseSuccess | ResponseError> {
+  async update(data: Customer, id: string): Promise<ResponseSuccess> {
     try {
       await this.edit(data, CustomerAdapter.COLLECTION, id)
       return { message: id, snapshop: [data] } as ResponseSuccess
@@ -40,7 +33,7 @@ export default class CustomerAdapter extends firebaseAdapter {
     }
   }
 
-  async getCustomerById(id: string): Promise<ResponseSuccess | ResponseError> {
+  async getCustomerById(id: string): Promise<ResponseSuccess> {
     return this.getDocbyId(CustomerAdapter.COLLECTION, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
@@ -48,7 +41,7 @@ export default class CustomerAdapter extends firebaseAdapter {
       })
   }
 
-  async getAllCustomers(): Promise<ResponseSuccess | ResponseError> {
+  async getAllCustomers(): Promise<ResponseSuccess> {
     const data = this.getAllbyCollection(CustomerAdapter.COLLECTION)
     return data
       .then((result) => result as ResponseSuccess)

@@ -1,9 +1,8 @@
-
 import ResponseSuccess from './responseSuccess'
 import ResponseError from './responseError'
 import { CreateAppointmentDto } from './dto/create-appointment.dto'
 import { UpdateAppointmentDTO } from './dto/update-appointment.dto'
-import AppointmentAdapter from '../infra/firestoreDb/appointmentAdapter'
+import AppointmentAdapter from './Adapters/firebaseAdapters/appointmentFirebaseAdapter'
 
 export default class AppointmentController {
   appointmentAdapter: AppointmentAdapter
@@ -21,7 +20,8 @@ export default class AppointmentController {
       isDone: isDone,
     }
 
-    return this.appointmentAdapter.insert(appointment)
+    return this.appointmentAdapter
+      .insert(appointment)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
@@ -39,7 +39,8 @@ export default class AppointmentController {
       isDone: isDone,
     }
 
-    return this.appointmentAdapter.update(appointment)
+    return this.appointmentAdapter
+      .update(appointment)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error as ResponseError)
   }
@@ -52,7 +53,8 @@ export default class AppointmentController {
   }
 
   public getById(id: string): Promise<ResponseSuccess | ResponseError> {
-    return this.appointmentAdapter.getAppointmentById(id)
+    return this.appointmentAdapter
+      .getAppointmentById(id)
       .then((result) =>
         this.convertToAppointmentList(result as ResponseSuccess)
       )
