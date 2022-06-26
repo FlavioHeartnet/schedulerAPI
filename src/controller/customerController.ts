@@ -1,4 +1,6 @@
-import CustomerAdapter from '../application/customerAdapter'
+
+import Customer from '../domain/customer'
+import CustomerAdapter from '../infra/firestoreDb/customerAdapter'
 import ResponseError from './responseError'
 import ResponseSuccess from './responseSuccess'
 

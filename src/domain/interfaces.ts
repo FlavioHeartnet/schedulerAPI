@@ -13,6 +13,6 @@ export interface IResponseSuccess {
 export interface IAppointment {
   date: Date
   serviceDoneAt: Date
-  notes: String
+  notes: string
   isDone: boolean
 }
