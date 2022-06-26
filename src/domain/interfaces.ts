@@ -1,16 +1,12 @@
 export interface ICustomer {
-  id?: String
-  name: String
-  registrationId: String
+  id?: string
+  name: string
+  registrationId: string
   birthdate: Date
-}
-export interface IResponseError {
-  code: string
-  message: string
 }
 
 export interface IResponseSuccess {
-  message: String
+  message: string
   snapshop: unknown[]
 }
 

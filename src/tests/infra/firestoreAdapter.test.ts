@@ -3,9 +3,9 @@ import {
   DocumentReference,
   FirestoreError,
 } from 'firebase/firestore'
-import FirebaseAdapter from '../../Infra/firestoreDb/firebaseDb'
-import { localizeErrorsMap } from '../../Infra/firestoreException'
-import { db } from '../../Infra/firestoreDb/firebase'
+import FirebaseAdapter from '../../infra/firestoreDb/firebaseDb'
+import { localizeErrorsMap } from '../../infra/firestoreDb/firestoreException'
+import { db } from '../../infra/firestoreDb/firebase'
 import ResponseError from '../../controller/responseError'
 import ResponseSuccess from '../../controller/responseSuccess'
 

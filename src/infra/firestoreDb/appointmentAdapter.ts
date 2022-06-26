@@ -1,4 +1,5 @@
-import ResponseError from '../../controller/responseError'
+import { CreateAppointmentDto } from '../../controller/dto/create-appointment.dto'
+import { UpdateAppointmentDTO } from '../../controller/dto/update-appointment.dto'
 import ResponseSuccess from '../../controller/responseSuccess'
 import firebaseAdapter from './firebaseDb'
 
@@ -8,7 +9,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
     super()
   }
 
-  async insert(data: Appointment): Promise<ResponseSuccess | ResponseError> {
+  async insert(data: CreateAppointmentDto): Promise<ResponseSuccess> {
     try {
       if (await this.validateAppointment(data)) {
         return {
@@ -17,16 +18,13 @@ export default class AppointmentAdapter extends firebaseAdapter {
           snapshop: [],
         } as ResponseSuccess
       }
-      return {
-        message: 'Appointment already exists',
-        code: 'already_exists',
-      } as ResponseError
+      throw new Error('Appointment already exists')
     } catch (e) {
       throw e
     }
   }
 
-  protected async validateAppointment(data: Appointment): Promise<boolean> {
+  protected async validateAppointment(data: CreateAppointmentDto): Promise<boolean> {
     return await this.getAppointmentByDate(data.date)
   }
 
@@ -47,8 +45,8 @@ export default class AppointmentAdapter extends firebaseAdapter {
   }
 
   async update(
-    data: Appointment,
-  ): Promise<ResponseSuccess | ResponseError> {
+    data: UpdateAppointmentDTO,
+  ): Promise<ResponseSuccess> {
     try {
       await this.edit(data, AppointmentAdapter.COLLECTION, data.id)
       return { message: data.id, snapshop: [data] } as ResponseSuccess
@@ -59,7 +57,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
 
   async getAppointmentById(
     id: string
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     return this.getDocbyId(AppointmentAdapter.COLLECTION, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
@@ -67,7 +65,7 @@ export default class AppointmentAdapter extends firebaseAdapter {
       })
   }
 
-  async getAllAppointments(): Promise<ResponseSuccess | ResponseError> {
+  async getAllAppointments(): Promise<ResponseSuccess> {
     const data = this.getAllbyCollection(AppointmentAdapter.COLLECTION)
     return data
       .then((result) => result as ResponseSuccess)
