@@ -52,8 +52,6 @@ it('should create a new appointment and return FirebaseError', () => {
     })
 })
 
-
-
 describe('Handle the edition of an appointment', () => {
   it('should edit an appointment and return success', () => {
     jest

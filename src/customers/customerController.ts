@@ -1,4 +1,3 @@
-
 import Customer from '../domain/customer'
 import CustomerAdapter from './adapters/firebaseAdapter/customerFirebaseAdapter'
 import ResponseSuccess from '../domain/responseSuccess'
@@ -8,9 +7,7 @@ export default class CustomerController extends CustomerAdapter {
     super()
   }
 
-  public newCustomer(
-    newCustomer: Customer
-  ): Promise<ResponseSuccess> {
+  public newCustomer(newCustomer: Customer): Promise<ResponseSuccess> {
     return this.insert(newCustomer)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
