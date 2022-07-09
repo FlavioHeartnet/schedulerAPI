@@ -1,12 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import CustomerController from './controller/customerController'
+import CustomerController from '../../../customers/customerController'
 import jwt, { Secret } from 'jsonwebtoken'
-import { auth } from './firebase'
+import { auth } from '../../firestoreDb/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import AppointmentController from './controller/appointmentController'
-import Customer from './model/customer'
+import AppointmentController from '../../../appointments/appointmentController'
+import config from '../../config'
 
 const currentUser = {
   username: '',
@@ -19,9 +19,12 @@ const currentUser = {
 
 const app = express()
 const port = 3000
-const token: Secret = process.env.ACCESS_TOKEN_SECRET as Secret
+const token: Secret = config.accessTokenSecret as Secret
 
 app.use(bodyParser.json())
+app.get('/healthz', (_req, res) => {
+  res.send('OK')
+})
 app.use(cookieParser())
 const verify = async (req, res, next) => {
   try {
@@ -45,32 +48,26 @@ const verify = async (req, res, next) => {
 
 app.post('/login', async (req, res) => {
   try {
+    // need to put this inside the Framework(infra) folder and create a use case for this
     await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
       .then(() => {
         currentUser.username = req.body.email
       })
-      .catch((error: { code; message }) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-
+      .catch((error: { code; message }) =>
         res.json({
-          Error: errorMessage,
-          ErrorCode: errorCode,
+          Error: error.message,
+          ErrorCode: error.code,
         })
-      })
-
-    let accessToken = ''
-    accessToken = jwt.sign(currentUser, token, {
-      algorithm: 'HS256',
-      expiresIn: process.env.ACCESS_TOKEN_LIFE,
-    })
-
+      )
     res.json({
-      token: accessToken,
-      User: currentUser,
+      token: jwt.sign(currentUser, token, {
+        algorithm: 'HS256',
+        expiresIn: config.accessTokenLife,
+      }),
+      user: currentUser,
     })
   } catch (e) {
-    res.json({
+    res.status(500).send({
       Error:
         'Dados inseridos incorretamente verifique o formato da request desta API: /login',
     })
@@ -117,13 +114,13 @@ app
       const name = req.body.name
       const registrationId = req.body.registrationId
       const birthdate = req.body.birthdate
-      const client: Customer = {
+      const client = {
         name: name,
         registrationId: registrationId,
         birthdate: birthdate,
       }
       clientController
-        .insert(client)
+        .newCustomer(client)
         .then((a) => {
           res.json({
             id: a.message,
@@ -133,7 +130,7 @@ app
           })
         })
         .catch((error) => {
-          res.sendStatus(500).json({
+          res.status(500).send({
             Status: -1,
             Error: error.message,
           })
@@ -152,13 +149,13 @@ app
       const name = req.body.name
       const registrationId = req.body.registrationId
       const birthdate = req.body.birthdate
-      const customer: Customer = {
+      const customer = {
         name: name,
         registrationId: registrationId,
         birthdate: birthdate,
       }
       clientController
-        .update(customer, id)
+        .updateCustomer(id, customer)
         .then(() => {
           res.json({
             name: name,
@@ -195,13 +192,14 @@ app.get('/clientesbyid/:id', verify, (req, res) => {
 app.post('/agendamentos/insert', verify, (req, res) => {
   try {
     const appointment = new AppointmentController()
-    const data = req.body.data
+    const date = req.body.date
+    const notes = req.body.notes
     appointment
-      .insert(data)
+      .newAppointment(date, notes, false)
       .then((a) => {
         res.json({
           id: a.message,
-          data: data,
+          date: date,
         })
       })
       .catch((error) => {
@@ -219,16 +217,15 @@ app.post('/agendamentos/update', verify, (req, res) => {
   try {
     const appointment = new AppointmentController()
     const id = req.body.id
-    const data = req.body.Data
-    const serviceDoneAt = req.body.serviceDoneAt
+    const date = req.body.date
     const notes = req.body.notes
+    const isDone = req.body.isDone
     appointment
-      .update(id, data)
+      .updateAppointment(id, date, notes, isDone)
       .then((a) => {
         res.json({
           id: a?.message,
-          data: data,
-          serviceDoneAt: serviceDoneAt,
+          date: date,
           notes: notes,
         })
       })

@@ -12,38 +12,30 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore'
-import { db } from '../firebase'
-import ResponseError from '../model/responseError'
-import ResponseSuccess from '../model/responseSuccess'
+import { db } from './firebase'
+import ResponseSuccess from '../../domain/responseSuccess'
 import { localizeErrorsMap } from './firestoreException'
 
 interface DatabaseStruct {
-  store(
-    data,
-    collection: string,
-    converter
-  ): Promise<ResponseSuccess | ResponseError>
+  store(data, collection: string, converter): Promise<ResponseSuccess>
   edit(
     data,
     collection: string,
     doc: string,
     converter
-  ): Promise<ResponseSuccess | ResponseError>
+  ): Promise<ResponseSuccess>
 }
 
-export default class FirebaseAdapter implements DatabaseStruct {
+export default class FirebaseDb implements DatabaseStruct {
   protected db: Firestore = db
-  async store(
-    data,
-    collectionName: string
-  ): Promise<ResponseSuccess | ResponseError> {
+  async store(data, collectionName: string): Promise<ResponseSuccess> {
     try {
       return {
         message: (await this.insertDocument(collectionName, data)).id,
         snapshop: [],
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -58,21 +50,21 @@ export default class FirebaseAdapter implements DatabaseStruct {
     data,
     collectionName: string,
     id: string
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     try {
       await this.editDocument(collectionName, id, data)
       return { message: id, snapshop: [] } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
-  private exceptionHandler(e): ResponseError {
+  protected exceptionHandler(e): Error {
     const exception: FirestoreError = e
     return {
-      code: exception.code,
+      name: exception.code,
       message: localizeErrorsMap(exception),
-    } as ResponseError
+    }
   }
 
   async editDocument(collectionName: string, id: string, data: object) {
@@ -81,7 +73,7 @@ export default class FirebaseAdapter implements DatabaseStruct {
 
   protected async getAllbyCollection(
     colletionName: string
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     try {
       return {
         message: 'ok',
@@ -90,14 +82,14 @@ export default class FirebaseAdapter implements DatabaseStruct {
         ),
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
   protected async getDocbyId(
     colletionName: string,
     id: String
-  ): Promise<ResponseSuccess | ResponseError> {
+  ): Promise<ResponseSuccess> {
     try {
       return {
         message: id,
@@ -108,7 +100,7 @@ export default class FirebaseAdapter implements DatabaseStruct {
         ),
       } as ResponseSuccess
     } catch (e) {
-      return this.exceptionHandler(e)
+      throw this.exceptionHandler(e)
     }
   }
 
@@ -118,5 +110,18 @@ export default class FirebaseAdapter implements DatabaseStruct {
       objArray.push(snapshot.data().values)
     })
     return objArray
+  }
+
+  protected getDocsbyWhere(
+    collectionName: string,
+    property: unknown,
+    collectionProperty: string
+  ) {
+    return getDocs(
+      query(
+        collection(db, collectionName),
+        where(collectionProperty, '==', property)
+      )
+    )
   }
 }

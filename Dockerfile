@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16-bullseye-slim
 
 WORKDIR /app/src
 
@@ -8,4 +8,4 @@ RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+CMD [ "tsnd", "src/infra/http/express/app.ts" ]

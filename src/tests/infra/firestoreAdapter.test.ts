@@ -3,11 +3,10 @@ import {
   DocumentReference,
   FirestoreError,
 } from 'firebase/firestore'
-import FirebaseAdapter from '../../database/firebaseAdapter'
-import { localizeErrorsMap } from '../../database/firestoreException'
-import { db } from '../../firebase'
-import ResponseError from '../../model/responseError'
-import ResponseSuccess from '../../model/responseSuccess'
+import FirebaseAdapter from '../../infra/firestoreDb/firebaseDb'
+import { localizeErrorsMap } from '../../infra/firestoreDb/firestoreException'
+import { db } from '../../infra/firestoreDb/firebase'
+import ResponseSuccess from '../../domain/responseSuccess'
 
 const adapter: FirebaseAdapter = new FirebaseAdapter()
 const testObject = {
@@ -46,7 +45,7 @@ describe('Handle store use cases', () => {
       .spyOn(adapter, 'insertDocument')
       .mockImplementation(() => Promise.reject(mockFirestoreError))
     const result = adapter.store(testObject, 'foo')
-    result.catch((error: ResponseError) => {
+    result.catch((error) => {
       console.log(error.message)
       console.log(mockFirestoreError.message)
       expect(error.message).toEqual(mockFirestoreError.message)
@@ -70,7 +69,7 @@ describe('Handle edit use cases', () => {
       .spyOn(adapter, 'editDocument')
       .mockImplementation(() => Promise.reject(mockFirestoreError))
     const result = adapter.edit(testObject, 'foo', '1')
-    result.catch((error: ResponseError) => {
+    result.catch((error) => {
       expect(error.message).toEqual(mockFirestoreError.message)
     })
   })

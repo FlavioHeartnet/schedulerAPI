@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: agendasalaoapi-app-service
+spec:
+  selector:
+    app: agendasalaoapi-app
+  type: ClusterIP  
+  ports:
+  - port: 3000
+    name: agendasalaoapi-app-service
+    protocol: TCP
