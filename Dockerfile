@@ -8,4 +8,4 @@ RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 3000
-CMD [ "tsnd", "src/infra/express/app.ts" ]
+CMD [ "tsnd", "src/infra/http/express/app.ts" ]

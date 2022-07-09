@@ -48,6 +48,7 @@ const verify = async (req, res, next) => {
 
 app.post('/login', async (req, res) => {
   try {
+    // need to put this inside the Framework(infra) folder and create a use case for this
     await signInWithEmailAndPassword(auth, req.body.email, req.body.password)
       .then(() => {
         currentUser.username = req.body.email

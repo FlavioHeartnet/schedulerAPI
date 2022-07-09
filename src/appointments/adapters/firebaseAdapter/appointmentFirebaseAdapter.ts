@@ -25,8 +25,9 @@ export default class AppointmentFirebaseAdapter
     try {
       if (await this.validateAppointment(data)) {
         await this.store(data, AppointmentFirebaseAdapter.COLLECTION)
+      } else {
+        throw new Error('Appointment already exists!')
       }
-      throw new Error('Appointment already exists')
     } catch (e) {
       throw e
     }
