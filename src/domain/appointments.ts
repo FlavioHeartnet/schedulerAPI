@@ -1,5 +1,4 @@
 export default class Appointment {
-
   create(date: Date, notes: string, isDone: boolean): Appointment {
     this._date = date
     this._notes = notes

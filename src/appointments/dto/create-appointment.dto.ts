@@ -1,5 +1,5 @@
 export class CreateAppointmentDto {
   date: Date
-  notes: String
+  notes: string
   isDone: boolean
 }

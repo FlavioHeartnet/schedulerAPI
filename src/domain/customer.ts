@@ -1,5 +1,10 @@
-
 export default class Customer {
+  create(name: string, registrationId: string, birthdate: string): Customer {
+    this._name = name
+    this._registrationId = registrationId
+    this._birthdate = new Date(birthdate)
+    return this
+  }
   private _name: string
   private _registrationId: string
   private _birthdate: Date

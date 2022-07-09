@@ -3,11 +3,7 @@ import Customer from '../../domain/customer'
 import ResponseSuccess from '../../domain/responseSuccess'
 
 const controller = new CustomerController()
-const mockedCustomer: Customer = {
-  name: 'Teste',
-  registrationId: '123456789',
-  birthdate: new Date(),
-}
+const mockedCustomer: Customer = new Customer().create('Jonh Doe', '123456789', '01/01/2000')
 const mockedSucessResponse: ResponseSuccess = {
   message: '1',
   snapshop: [mockedCustomer],
@@ -59,9 +55,7 @@ describe('Handle the edition of an appointment', () => {
     controller
       .updateCustomer(
         '1',
-        mockedCustomer.name,
-        mockedCustomer.registrationId,
-        mockedCustomer.birthdate
+        mockedCustomer,
       )
       .then((result) => {
         expect(result as ResponseSuccess).toEqual(mockedSucessResponse)
@@ -75,9 +69,7 @@ describe('Handle the edition of an appointment', () => {
     controller
       .updateCustomer(
         '1',
-        mockedCustomer.name,
-        mockedCustomer.registrationId,
-        mockedCustomer.birthdate
+        mockedCustomer,
       )
       .catch((error) => {
         expect(error).toEqual(mockedErrorResponseBR)

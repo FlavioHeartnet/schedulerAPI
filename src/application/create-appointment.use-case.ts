@@ -1,14 +1,15 @@
-import Appointment from "../domain/appointments"
-import AppointmentsRepositoryInterface from "../domain/appointmentsRepositoryInterface"
-
+import Appointment from '../domain/appointments'
+import AppointmentsRepositoryInterface from '../domain/appointmentsRepositoryInterface'
 
 export default class CreateAppointmentUseCase {
-  constructor(private appointmentRepo: AppointmentsRepositoryInterface) { }
+  constructor(private appointmentRepo: AppointmentsRepositoryInterface) {}
 
   async execute(
     input: CreateAppointmentInput
   ): Promise<CreateAppointmentOutput> {
-    await this.appointmentRepo.insert(new Appointment().create(input.date, input.notes, input.isDone))
+    await this.appointmentRepo.insert(
+      new Appointment().create(input.date, input.notes, input.isDone)
+    )
     return {
       id: '',
       date: input.date,

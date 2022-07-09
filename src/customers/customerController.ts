@@ -1,14 +1,16 @@
+
 import Customer from '../domain/customer'
-import CustomerAdapter from './adapters/firebaseAdapter/customerFirebaseAdapter'
 import ResponseSuccess from '../domain/responseSuccess'
+import CustomerAdapter from './adapters/firebaseAdapter/customerFirebaseAdapter'
+import CreateCustomerDto from './dto/create-customer.dto'
+import UpdateCustomerDto from './dto/update-customer.dto'
 
 export default class CustomerController extends CustomerAdapter {
   constructor() {
     super()
   }
-
-  public newCustomer(newCustomer: Customer): Promise<ResponseSuccess> {
-    return this.insert(newCustomer)
+  public newCustomer(newCustomer: CreateCustomerDto): Promise<ResponseSuccess> {
+    return this.insert(newCustomer as Customer)
       .then((result) => result as ResponseSuccess)
       .catch((error) => {
         throw error
@@ -17,17 +19,10 @@ export default class CustomerController extends CustomerAdapter {
 
   public updateCustomer(
     id: string,
-    name: String,
-    registrationId: String,
-    birthdate: Date
+    customer: UpdateCustomerDto
   ): Promise<ResponseSuccess> {
-    const customer: Customer = {
-      name: name,
-      registrationId: registrationId,
-      birthdate: birthdate,
-    }
 
-    return this.update(customer, id)
+    return this.update(customer as Customer, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error)
   }

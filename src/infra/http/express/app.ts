@@ -154,7 +154,7 @@ app
         birthdate: birthdate,
       }
       clientController
-        .update(customer, id)
+        .updateCustomer(id, customer)
         .then(() => {
           res.json({
             name: name,
