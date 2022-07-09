@@ -1,4 +1,3 @@
-
 import Customer from '../domain/customer'
 import ResponseSuccess from '../domain/responseSuccess'
 import CustomerAdapter from './adapters/firebaseAdapter/customerFirebaseAdapter'
@@ -21,7 +20,6 @@ export default class CustomerController extends CustomerAdapter {
     id: string,
     customer: UpdateCustomerDto
   ): Promise<ResponseSuccess> {
-
     return this.update(customer as Customer, id)
       .then((result) => result as ResponseSuccess)
       .catch((error) => error)

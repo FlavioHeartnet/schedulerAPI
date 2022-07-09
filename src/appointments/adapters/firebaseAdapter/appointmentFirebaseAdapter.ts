@@ -4,18 +4,15 @@ import Appointment from '../../../domain/appointments'
 
 export default class AppointmentFirebaseAdapter
   extends FirebaseDb
-  implements AppointmentsRepositoryInterface {
+  implements AppointmentsRepositoryInterface
+{
   public static COLLECTION: string = 'Appointment'
   constructor() {
     super()
   }
   async update(appointment: Appointment, id: string): Promise<void> {
     try {
-      await this.edit(
-        appointment,
-        AppointmentFirebaseAdapter.COLLECTION,
-        id
-      )
+      await this.edit(appointment, AppointmentFirebaseAdapter.COLLECTION, id)
     } catch (e) {
       throw this.exceptionHandler(e)
     }
@@ -33,9 +30,7 @@ export default class AppointmentFirebaseAdapter
     }
   }
 
-  protected async validateAppointment(
-    data: Appointment
-  ): Promise<boolean> {
+  protected async validateAppointment(data: Appointment): Promise<boolean> {
     return await this.getAppointmentByDate(data.date)
   }
 
@@ -54,8 +49,6 @@ export default class AppointmentFirebaseAdapter
       throw e
     }
   }
-
-
 
   async getAppointmentById(id: string): Promise<Appointment> {
     return this.getDocbyId(AppointmentFirebaseAdapter.COLLECTION, id)

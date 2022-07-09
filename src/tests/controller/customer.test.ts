@@ -3,7 +3,11 @@ import Customer from '../../domain/customer'
 import ResponseSuccess from '../../domain/responseSuccess'
 
 const controller = new CustomerController()
-const mockedCustomer: Customer = new Customer().create('Jonh Doe', '123456789', '01/01/2000')
+const mockedCustomer: Customer = new Customer().create(
+  'Jonh Doe',
+  '123456789',
+  '01/01/2000'
+)
 const mockedSucessResponse: ResponseSuccess = {
   message: '1',
   snapshop: [mockedCustomer],
@@ -52,27 +56,17 @@ describe('Handle the edition of an appointment', () => {
     jest
       .spyOn(controller, 'edit')
       .mockImplementation(() => Promise.resolve(mockedSucessResponse))
-    controller
-      .updateCustomer(
-        '1',
-        mockedCustomer,
-      )
-      .then((result) => {
-        expect(result as ResponseSuccess).toEqual(mockedSucessResponse)
-      })
+    controller.updateCustomer('1', mockedCustomer).then((result) => {
+      expect(result as ResponseSuccess).toEqual(mockedSucessResponse)
+    })
   })
 
   it('should edit an appointment and return FirebaseError', () => {
     jest
       .spyOn(controller, 'edit')
       .mockImplementation(() => Promise.reject(mockedErrorResponseBR))
-    controller
-      .updateCustomer(
-        '1',
-        mockedCustomer,
-      )
-      .catch((error) => {
-        expect(error).toEqual(mockedErrorResponseBR)
-      })
+    controller.updateCustomer('1', mockedCustomer).catch((error) => {
+      expect(error).toEqual(mockedErrorResponseBR)
+    })
   })
 })

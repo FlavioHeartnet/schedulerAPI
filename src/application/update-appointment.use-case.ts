@@ -2,13 +2,15 @@ import AppointmentFirebaseAdapter from '../appointments/adapters/firebaseAdapter
 import Appointment from '../domain/appointments'
 
 export class UpdateAppointmentUseCase {
-  constructor(private appointmentAdapter: AppointmentFirebaseAdapter) { }
+  constructor(private appointmentAdapter: AppointmentFirebaseAdapter) {}
 
   async execute(
     input: UpdateAppointmentInput
   ): Promise<UpdateAppointmentOutput> {
-
-    await await this.appointmentAdapter.update(new Appointment().create(input.date, input.notes, input.isDone), input.id)
+    await await this.appointmentAdapter.update(
+      new Appointment().create(input.date, input.notes, input.isDone),
+      input.id
+    )
     return {
       date: input.date,
       notes: input.notes,

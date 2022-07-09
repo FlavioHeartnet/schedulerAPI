@@ -17,7 +17,9 @@ export default class AppointmentController {
     this.createUseCase = new CreateAppointmentUseCase(new AppointmentAdapter())
     this.updateUseCase = new UpdateAppointmentUseCase(new AppointmentAdapter())
     this.getallUseCase = new GetAllAppointmentUseCase(new AppointmentAdapter())
-    this.getbyidUseCase = new GetByIdAppointmentUseCase(new AppointmentAdapter())
+    this.getbyidUseCase = new GetByIdAppointmentUseCase(
+      new AppointmentAdapter()
+    )
   }
   public newAppointment(
     date: Date,
