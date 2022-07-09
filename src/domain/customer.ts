@@ -1,11 +1,5 @@
-import CustomerRepositoryInterface from "./customerRepositoryInterface"
 
-export default abstract class Customer implements CustomerRepositoryInterface {
-  abstract insert(customer: Customer): Promise<void>
-  abstract update(customer: Customer, id: string): Promise<void>
-  abstract getAllCustomers(): Promise<Customer[]>
-  abstract getCustomerById(id: string): Promise<Customer>
-
+export default class Customer {
   private _name: string
   private _registrationId: string
   private _birthdate: Date

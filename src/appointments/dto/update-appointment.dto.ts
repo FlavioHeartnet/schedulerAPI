@@ -1,5 +1,5 @@
 export class UpdateAppointmentDTO {
-  id: string
+  id?: string
   date: Date
   notes: String
   isDone: boolean

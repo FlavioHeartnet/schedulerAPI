@@ -1,12 +1,11 @@
-import AppointmentsRepositoryInterface from './appointmentsRepositoryInterface'
+export default class Appointment {
 
-export default abstract class Appointment
-  implements AppointmentsRepositoryInterface
-{
-  abstract insert(appointment: Appointment): Promise<void>
-  abstract update(appointment: Appointment, id: string): Promise<void>
-  abstract getAllAppointments(): Promise<Appointment[]>
-  abstract getAppointmentById(id: string): Promise<Appointment>
+  create(date: Date, notes: string, isDone: boolean): Appointment {
+    this._date = date
+    this._notes = notes
+    this._isDone = isDone
+    return this
+  }
   private _id?: string | undefined
   public get id(): string | undefined {
     return this._id
@@ -21,11 +20,11 @@ export default abstract class Appointment
   public set date(value: Date) {
     this._date = value
   }
-  private _serviceDoneAt: Date
-  public get serviceDoneAt(): Date {
+  private _serviceDoneAt?: Date | undefined
+  public get serviceDoneAt(): Date | undefined {
     return this._serviceDoneAt
   }
-  public set serviceDoneAt(value: Date) {
+  public set serviceDoneAt(value: Date | undefined) {
     this._serviceDoneAt = value
   }
   private _notes: string
