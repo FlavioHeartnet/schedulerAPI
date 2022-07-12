@@ -1,13 +1,17 @@
-import AppointmentFirebaseAdapter from '../appointments/adapters/firebaseAdapter/appointmentFirebaseAdapter'
+import Appointment from '../domain/appointments'
+import AppointmentsRepositoryInterface from '../domain/appointmentsRepositoryInterface'
 
-export class CreateAppointmentUseCase {
-  constructor(private appointmentAdapter: AppointmentFirebaseAdapter) {}
+export default class CreateAppointmentUseCase {
+  constructor(private appointmentRepo: AppointmentsRepositoryInterface) {}
 
   async execute(
     input: CreateAppointmentInput
   ): Promise<CreateAppointmentOutput> {
+    await this.appointmentRepo.insert(
+      new Appointment().create(input.date, input.notes, input.isDone)
+    )
     return {
-      id: await (await this.appointmentAdapter.insert(input)).message,
+      id: '',
       date: input.date,
       notes: input.notes,
       isDone: input.isDone,

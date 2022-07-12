@@ -3,13 +3,7 @@ import Appointment from '../../domain/appointments'
 import ResponseSuccess from '../../domain/responseSuccess'
 
 const controller: AppointmentController = new AppointmentController()
-const mockedAppointment: Appointment = {
-  date: new Date('2022-06-10'),
-  notes: 'test notes',
-  isDone: false,
-  serviceDoneAt: new Date(),
-}
-
+const mockedAppointment = new Appointment().create(new Date(), 'notes', false)
 const mockedSucessResponse: ResponseSuccess = {
   message: '1',
   snapshop: [mockedAppointment],

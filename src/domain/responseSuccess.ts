@@ -1,6 +1,5 @@
-import { IResponseSuccess } from './interfaces'
-
-export default class ResponseSuccess implements IResponseSuccess {
-  snapshop: unknown[]
+export default class ResponseSuccess {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  snapshop: any[]
   message: string
 }
