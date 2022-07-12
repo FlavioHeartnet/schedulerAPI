@@ -6,7 +6,7 @@ import jwt, { Secret } from 'jsonwebtoken'
 import { auth } from '../../firestoreDb/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import AppointmentController from '../../../appointments/appointmentController'
-import config from '../../config'
+import config from '../../../config'
 
 const currentUser = {
   username: '',

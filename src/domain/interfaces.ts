@@ -1,5 +1,4 @@
 export interface ICustomer {
-  id?: string
   name: string
   registrationId: string
   birthdate: Date

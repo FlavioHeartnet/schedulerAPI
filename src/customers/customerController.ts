@@ -17,8 +17,8 @@ export default class CustomerController extends CustomerAdapter {
 
   public updateCustomer(
     id: string,
-    name: String,
-    registrationId: String,
+    name: string,
+    registrationId: string,
     birthdate: Date
   ): Promise<ResponseSuccess> {
     const customer: Customer = {
