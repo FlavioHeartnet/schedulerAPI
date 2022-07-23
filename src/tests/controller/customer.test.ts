@@ -43,8 +43,8 @@ describe('Handle the creation of a new appointment', () => {
 
   it('should try to create a new appointment and return appointment already exists', () => {
     jest
-      .spyOn(controller, 'isRegistrationValid')
-      .mockImplementation(() => Promise.resolve(false))
+      .spyOn(controller, 'insert')
+      .mockImplementation(() => Promise.reject(mockedAlreadyExists))
     controller.newCustomer(mockedCustomer).catch((error) => {
       expect(error).toEqual(mockedAlreadyExists)
     })

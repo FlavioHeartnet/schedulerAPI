@@ -17,7 +17,11 @@ export default class CustomerAdapter extends FirebaseDb {
           snapshop: [],
         } as ResponseSuccess
       } else {
-        throw new Error('Registration already exists')
+        const AlreadyExists: Error = {
+          message: 'Customer already exists',
+          name: 'already_exists',
+        }
+        throw AlreadyExists
       }
     } catch (e) {
       throw e

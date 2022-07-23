@@ -3,12 +3,12 @@ import {
   DocumentReference,
   FirestoreError,
 } from 'firebase/firestore'
-import FirebaseAdapter from '../../infra/firestoreDb/firebaseDb'
+import FirebaseDb from '../../infra/firestoreDb/firebaseDb'
 import { localizeErrorsMap } from '../../infra/firestoreDb/firestoreException'
 import { db } from '../../infra/firestoreDb/firebase'
 import ResponseSuccess from '../../domain/responseSuccess'
 
-const adapter: FirebaseAdapter = new FirebaseAdapter()
+const adapter: FirebaseDb = new FirebaseDb()
 const testObject = {
   id: '1',
   name: 'john doe',
@@ -46,8 +46,6 @@ describe('Handle store use cases', () => {
       .mockImplementation(() => Promise.reject(mockFirestoreError))
     const result = adapter.store(testObject, 'foo')
     result.catch((error) => {
-      console.log(error.message)
-      console.log(mockFirestoreError.message)
       expect(error.message).toEqual(mockFirestoreError.message)
     })
   })
